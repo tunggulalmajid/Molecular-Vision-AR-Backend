@@ -38,9 +38,7 @@ const updatePassword = () => {
 <template>
     <section>
         <header>
-            <h2 class="text-lg font-medium text-gray-900">
-                Update Password
-            </h2>
+            <h2 class="text-lg font-medium text-gray-900">Update Password</h2>
 
             <p class="mt-1 text-sm text-gray-600">
                 Ensure your account is using a long, random password to stay
@@ -102,7 +100,7 @@ const updatePassword = () => {
                 />
             </div>
 
-            <div class="flex items-center gap-4">
+            <div class="gap-4 flex items-center">
                 <PrimaryButton :disabled="form.processing">Save</PrimaryButton>
 
                 <Transition

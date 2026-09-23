@@ -6,8 +6,8 @@ import TextInput from '@/Components/TextInput.vue';
 import { Link, useForm, usePage } from '@inertiajs/vue3';
 
 defineProps<{
-    mustVerifyEmail?: Boolean;
-    status?: String;
+    mustVerifyEmail?: boolean;
+    status?: string;
 }>();
 
 const user = usePage().props.auth.user;
@@ -72,7 +72,7 @@ const form = useForm({
                         :href="route('verification.send')"
                         method="post"
                         as="button"
-                        class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                        class="rounded-md text-sm text-gray-600 hover:text-gray-900 focus:ring-indigo-500 underline focus:ring-2 focus:ring-offset-2 focus:outline-none"
                     >
                         Click here to re-send the verification email.
                     </Link>
@@ -86,7 +86,7 @@ const form = useForm({
                 </div>
             </div>
 
-            <div class="flex items-center gap-4">
+            <div class="gap-4 flex items-center">
                 <PrimaryButton :disabled="form.processing">Save</PrimaryButton>
 
                 <Transition
