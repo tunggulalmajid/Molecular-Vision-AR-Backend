@@ -210,7 +210,7 @@ const formatDate = (dateString?: string): string => {
                         class="transition hover:bg-[#0c1c2e]"
                     >
                         <!-- PENGGUNA -->
-                        <td class="px-6 py-4">
+                        <td class="px-6 py-4 whitespace-nowrap">
                             <div class="flex items-center gap-3">
                                 <div
                                     class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-[#1f3e61] bg-[#102438] text-xs font-bold text-[#e5a824]"
@@ -229,21 +229,21 @@ const formatDate = (dateString?: string): string => {
                         </td>
 
                         <!-- EMAIL -->
-                        <td class="px-6 py-4">
+                        <td class="px-6 py-4 whitespace-nowrap">
                             <span class="text-sm text-slate-300">
                                 {{ user.email }}
                             </span>
                         </td>
 
                         <!-- SEKOLAH / INSTITUSI -->
-                        <td class="px-6 py-4">
+                        <td class="px-6 py-4 whitespace-nowrap">
                             <span class="text-sm text-slate-300">
                                 {{ user.school || '-' }}
                             </span>
                         </td>
 
                         <!-- ROLE (Plain text, no badge) -->
-                        <td class="px-6 py-4">
+                        <td class="px-6 py-4 whitespace-nowrap">
                             <span
                                 class="text-sm font-medium text-slate-300 capitalize"
                             >
@@ -256,7 +256,7 @@ const formatDate = (dateString?: string): string => {
                         </td>
 
                         <!-- TANGGAL DAFTAR -->
-                        <td class="px-6 py-4">
+                        <td class="px-6 py-4 whitespace-nowrap">
                             <span class="text-sm text-slate-400">
                                 {{ formatDate(user.created_at) }}
                             </span>
@@ -265,7 +265,7 @@ const formatDate = (dateString?: string): string => {
                         <!-- AKSI (Icon only) -->
                         <td
                             v-if="can('users.edit') || can('users.delete')"
-                            class="px-6 py-4"
+                            class="px-6 py-4 whitespace-nowrap"
                         >
                             <div class="flex items-center justify-center gap-2">
                                 <button

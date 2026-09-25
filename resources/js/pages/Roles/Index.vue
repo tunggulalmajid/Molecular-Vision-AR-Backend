@@ -250,7 +250,7 @@ const formatDate = (dateString?: string): string => {
                         class="transition hover:bg-[#0c1c2e]"
                     >
                         <!-- NAMA PERAN -->
-                        <td class="px-6 py-4">
+                        <td class="px-6 py-4 whitespace-nowrap">
                             <div class="flex items-center gap-2.5">
                                 <span
                                     class="font-semibold text-white capitalize"
@@ -273,7 +273,7 @@ const formatDate = (dateString?: string): string => {
                         </td>
 
                         <!-- GUARD -->
-                        <td class="px-6 py-4">
+                        <td class="px-6 py-4 whitespace-nowrap">
                             <code
                                 class="rounded bg-[#06121f] px-2 py-1 font-mono text-xs text-slate-300"
                             >
@@ -282,14 +282,14 @@ const formatDate = (dateString?: string): string => {
                         </td>
 
                         <!-- TOTAL PENGGUNA -->
-                        <td class="px-6 py-4">
+                        <td class="px-6 py-4 whitespace-nowrap">
                             <span class="text-sm font-medium text-slate-300">
                                 {{ role.users_count || 0 }} Pengguna
                             </span>
                         </td>
 
                         <!-- HAK AKSES AKTIF -->
-                        <td class="px-6 py-4">
+                        <td class="px-6 py-4 whitespace-nowrap">
                             <span
                                 v-if="isSuperAdmin(role.name)"
                                 class="inline-flex items-center gap-1.5 text-xs font-semibold text-[#e5a824]"
@@ -307,7 +307,7 @@ const formatDate = (dateString?: string): string => {
                         </td>
 
                         <!-- TANGGAL DIBUAT -->
-                        <td class="px-6 py-4">
+                        <td class="px-6 py-4 whitespace-nowrap">
                             <span class="text-sm text-slate-400">
                                 {{ formatDate(role.created_at) }}
                             </span>
@@ -318,7 +318,7 @@ const formatDate = (dateString?: string): string => {
                             v-if="
                                 can('permissions.manage') || can('roles.manage')
                             "
-                            class="px-6 py-4"
+                            class="px-6 py-4 whitespace-nowrap"
                         >
                             <div
                                 class="flex items-center justify-center gap-1.5"

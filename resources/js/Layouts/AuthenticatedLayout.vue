@@ -143,17 +143,24 @@ onUnmounted(() => {
         >
             <!-- Top Branding Header -->
             <div
-                class="flex h-16 shrink-0 items-center justify-between border-b border-[#14263b] px-6"
+                class="flex h-16 shrink-0 items-center justify-between border-b border-[#14263b] px-6 py-12"
             >
                 <Link
                     :href="route('dashboard')"
                     class="flex items-center gap-3"
                 >
-                    <img
-                        src="/MVAR.png"
-                        alt="MVAR Logo"
-                        class="h-8 w-auto object-contain sm:h-9"
-                    />
+                    <div class="flex items-center justify-center gap-2">
+                        <img
+                            src="/favicon.ico"
+                            alt="MVAR Logo"
+                            class="h-10 w-auto object-contain sm:h-12"
+                        />
+                        <img
+                            src="/MVAR.png"
+                            alt="MVAR Logo"
+                            class="h-8 w-auto object-contain sm:h-9"
+                        />
+                    </div>
                 </Link>
 
                 <!-- Close button on mobile -->

@@ -63,10 +63,10 @@ const materialToDelete = ref<MaterialItem | null>(null);
 // Table configuration (conditional on permissions)
 const tableHeaders = computed<TableHeader[]>(() => {
     const headers: TableHeader[] = [
-        { label: 'NAMA MATERI' },
-        { label: 'KATEGORI' },
-        { label: 'DESKRIPSI' },
-        { label: 'TANGGAL' },
+        { label: 'NAMA MATERI', width: '220px' },
+        { label: 'KATEGORI', width: '160px' },
+        { label: 'DESKRIPSI', width: '280px' },
+        { label: 'TANGGAL', width: '130px' },
     ];
 
     if (can('materials.edit') || can('materials.delete')) {
@@ -248,7 +248,7 @@ const formatDate = (dateString?: string): string => {
                         class="transition hover:bg-[#0c1c2e]"
                     >
                         <!-- NAMA MATERI -->
-                        <td class="px-6 py-4">
+                        <td class="px-6 py-4 whitespace-nowrap">
                             <div class="flex items-center gap-3">
                                 <div>
                                     <span class="font-semibold text-white">
@@ -264,18 +264,16 @@ const formatDate = (dateString?: string): string => {
                         </td>
 
                         <!-- KATEGORI -->
-                        <td class="px-6 py-4">
-                            <div
-                                class="text-sm font-medium break-all text-slate-300"
-                            >
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="text-sm font-medium text-slate-300">
                                 {{ mat.category?.name || 'Tanpa Kategori' }}
-                            </div>
+                            </span>
                         </td>
 
-                        <!-- DESKRIPSI (Truncated with Ellipsis and break-all) -->
+                        <!-- DESKRIPSI (Truncated with Ellipsis and break-words) -->
                         <td class="max-w-sm px-6 py-4">
                             <p
-                                class="text-sm break-all text-slate-300"
+                                class="text-sm break-words text-slate-300"
                                 :title="mat.description || undefined"
                             >
                                 {{ truncateText(mat.description, 80) }}
@@ -283,7 +281,7 @@ const formatDate = (dateString?: string): string => {
                         </td>
 
                         <!-- TANGGAL DIBUAT -->
-                        <td class="px-6 py-4">
+                        <td class="px-6 py-4 whitespace-nowrap">
                             <div
                                 class="inline-flex items-center gap-1.5 text-xs text-slate-400"
                             >
@@ -297,7 +295,7 @@ const formatDate = (dateString?: string): string => {
                             v-if="
                                 can('materials.edit') || can('materials.delete')
                             "
-                            class="px-6 py-4"
+                            class="px-6 py-4 whitespace-nowrap"
                         >
                             <div class="flex items-center justify-center gap-2">
                                 <Link

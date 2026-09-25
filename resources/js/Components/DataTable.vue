@@ -23,7 +23,9 @@ withDefaults(
         class="w-full overflow-hidden rounded-xl border border-[#152a42] bg-[#0c1c2e] shadow-xl"
     >
         <div class="overflow-x-auto">
-            <table class="w-full text-left text-sm text-slate-300">
+            <table
+                class="w-full min-w-[680px] text-left text-sm text-slate-300"
+            >
                 <!-- Table Header -->
                 <thead
                     class="border-b border-[#152a42] bg-[#0a1827]/80 text-[11px] font-bold tracking-wider text-slate-400 uppercase"
@@ -35,7 +37,7 @@ withDefaults(
                             scope="col"
                             :style="header.width ? { width: header.width } : {}"
                             :class="[
-                                'px-6 py-4',
+                                'px-6 py-4 whitespace-nowrap',
                                 header.align === 'center'
                                     ? 'text-center'
                                     : header.align === 'right'

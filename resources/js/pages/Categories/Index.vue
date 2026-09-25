@@ -54,10 +54,10 @@ const selectedCategory = ref<CategoryItem | null>(null);
 // Table configuration (conditional on permissions)
 const tableHeaders = computed<TableHeader[]>(() => {
     const headers: TableHeader[] = [
-        { label: 'NAMA KATEGORI' },
-        { label: 'DESKRIPSI' },
-        { label: 'TOTAL MATERI' },
-        { label: 'TOTAL SOAL' },
+        { label: 'NAMA KATEGORI', width: '200px' },
+        { label: 'DESKRIPSI', width: '280px' },
+        { label: 'TOTAL MATERI', width: '130px' },
+        { label: 'TOTAL SOAL', width: '120px' },
     ];
 
     if (can('categories.edit') || can('categories.delete')) {
@@ -199,7 +199,7 @@ const truncateText = (
                         class="transition hover:bg-[#0c1c2e]"
                     >
                         <!-- NAMA KATEGORI -->
-                        <td class="px-6 py-4">
+                        <td class="px-6 py-4 whitespace-nowrap">
                             <div class="flex items-center gap-3">
                                 <div>
                                     <span class="font-semibold text-white">
@@ -217,7 +217,7 @@ const truncateText = (
                         <!-- DESKRIPSI -->
                         <td class="max-w-sm px-6 py-4">
                             <p
-                                class="text-sm break-all text-slate-300"
+                                class="text-sm break-words text-slate-300"
                                 :title="cat.description || undefined"
                             >
                                 {{ truncateText(cat.description, 80) }}
@@ -225,27 +225,17 @@ const truncateText = (
                         </td>
 
                         <!-- TOTAL MATERI -->
-                        <td class="px-6 py-4">
-                            <div
-                                class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium"
-                            >
-                                <span
-                                    >{{ cat.materials_count || 0 }}
-                                    <span class="ml-1">Materi</span></span
-                                >
-                            </div>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="text-sm font-medium text-slate-300">
+                                {{ cat.materials_count || 0 }} Materi
+                            </span>
                         </td>
 
                         <!-- TOTAL SOAL -->
-                        <td class="px-6 py-4">
-                            <div
-                                class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium"
-                            >
-                                <span
-                                    >{{ cat.questions_count || 0 }}
-                                    <span class="ml-1">Soal</span></span
-                                >
-                            </div>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="text-sm font-medium text-slate-300">
+                                {{ cat.questions_count || 0 }} Soal
+                            </span>
                         </td>
 
                         <!-- AKSI (Icon only) -->
@@ -254,7 +244,7 @@ const truncateText = (
                                 can('categories.edit') ||
                                 can('categories.delete')
                             "
-                            class="px-6 py-4"
+                            class="px-6 py-4 whitespace-nowrap"
                         >
                             <div class="flex items-center justify-center gap-2">
                                 <button
