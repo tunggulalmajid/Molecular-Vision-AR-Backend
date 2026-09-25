@@ -11,7 +11,7 @@ const props = withDefaults(
     {
         placeholder: 'Cari data...',
         debounceMs: 350,
-    }
+    },
 );
 
 const emit = defineEmits<{
@@ -26,7 +26,7 @@ watch(
     () => props.modelValue,
     (newVal) => {
         localValue.value = newVal;
-    }
+    },
 );
 
 const handleInput = (event: Event) => {
@@ -49,7 +49,9 @@ const clearSearch = () => {
 
 <template>
     <div class="relative w-full">
-        <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
+        <div
+            class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400"
+        >
             <Search class="h-4.5 w-4.5" :size="18" />
         </div>
 
@@ -58,7 +60,7 @@ const clearSearch = () => {
             :value="localValue"
             @input="handleInput"
             :placeholder="placeholder"
-            class="w-full rounded-lg border border-[#1b344d] bg-[#0c1a28] py-2.5 pl-10 pr-9 text-xs sm:text-sm text-white placeholder-slate-500 transition duration-150 focus:border-[#2e5984] focus:outline-none focus:ring-1 focus:ring-[#2e5984]"
+            class="w-full rounded-lg border border-[#1b344d] bg-[#0c1a28] py-2.5 pr-9 pl-10 text-xs text-white placeholder-slate-500 transition duration-150 focus:border-[#2e5984] focus:ring-1 focus:ring-[#2e5984] focus:outline-none sm:text-sm"
         />
 
         <button

@@ -11,7 +11,7 @@ const props = withDefaults(
     {
         title: '',
         maxWidth: 'md',
-    }
+    },
 );
 
 const emit = defineEmits<{
@@ -26,7 +26,7 @@ watch(
         } else {
             document.body.style.overflow = '';
         }
-    }
+    },
 );
 
 const maxWidthClasses = {
@@ -50,7 +50,7 @@ const maxWidthClasses = {
         >
             <div
                 v-if="show"
-                class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto"
+                class="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto p-4 sm:p-6"
             >
                 <!-- Backdrop -->
                 <div
@@ -75,8 +75,12 @@ const maxWidthClasses = {
                         ]"
                     >
                         <!-- Header -->
-                        <div class="flex items-center justify-between border-b border-[#14263b] pb-4">
-                            <h3 class="text-base sm:text-lg font-bold tracking-tight text-white">
+                        <div
+                            class="flex items-center justify-between border-b border-[#14263b] pb-4"
+                        >
+                            <h3
+                                class="text-base font-bold tracking-tight text-white sm:text-lg"
+                            >
                                 {{ title }}
                             </h3>
                             <button

@@ -38,17 +38,28 @@ const togglePasswordVisibility = () => {
     <div class="relative w-full">
         <input
             ref="inputRef"
-            :type="showPasswordToggle ? (isPasswordVisible ? 'text' : 'password') : type"
+            :type="
+                showPasswordToggle
+                    ? isPasswordVisible
+                        ? 'text'
+                        : 'password'
+                    : type
+            "
             :value="modelValue"
-            @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)"
+            @input="
+                $emit(
+                    'update:modelValue',
+                    ($event.target as HTMLInputElement).value,
+                )
+            "
             :placeholder="placeholder"
             :required="required"
             :autofocus="autofocus"
             :autocomplete="autocomplete"
             :class="[
                 'w-full rounded-lg border border-[#1b344d] bg-[#0c1a28] py-3 text-sm text-white placeholder-slate-500 transition-all duration-150',
-                'focus:border-[#2e5984] focus:outline-none focus:ring-1 focus:ring-[#2e5984]',
-                showPasswordToggle ? 'pl-4 pr-11' : 'px-4',
+                'focus:border-[#2e5984] focus:ring-1 focus:ring-[#2e5984] focus:outline-none',
+                showPasswordToggle ? 'pr-11 pl-4' : 'px-4',
             ]"
         />
 

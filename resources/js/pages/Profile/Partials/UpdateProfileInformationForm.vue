@@ -1,7 +1,13 @@
 <script setup lang="ts">
 import { useForm, usePage } from '@inertiajs/vue3';
 import DarkTextInput from '@/Components/DarkTextInput.vue';
-import { Loader2, CheckCircle2, Shield, GraduationCap, School } from 'lucide-vue-next';
+import {
+    Loader2,
+    CheckCircle2,
+    Shield,
+    GraduationCap,
+    School,
+} from 'lucide-vue-next';
 
 interface Degree {
     id_degree: number;
@@ -32,20 +38,23 @@ const submit = () => {
 </script>
 
 <template>
-    <section class="rounded-xl border border-[#14263b] bg-[#091624] p-6 shadow-xl sm:p-8">
+    <section
+        class="rounded-xl border border-[#14263b] bg-[#091624] p-6 shadow-xl sm:p-8"
+    >
         <header class="border-b border-[#14263b] pb-4">
-            <h2 class="text-lg font-bold text-white">
-                Informasi Profil Akun
-            </h2>
+            <h2 class="text-lg font-bold text-white">Informasi Profil Akun</h2>
             <p class="mt-1 text-xs text-slate-400">
-                Perbarui data profil akun Anda, instansi sekolah, serta jenjang tingkatan kelas.
+                Perbarui data profil akun Anda, instansi sekolah, serta jenjang
+                tingkatan kelas.
             </p>
         </header>
 
         <form @submit.prevent="submit" class="mt-6 space-y-5">
             <!-- Nama Lengkap -->
             <div>
-                <label class="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-300">
+                <label
+                    class="mb-1.5 block text-xs font-semibold tracking-wider text-slate-300 uppercase"
+                >
                     Nama Lengkap <span class="text-rose-500">*</span>
                 </label>
                 <DarkTextInput
@@ -63,7 +72,9 @@ const submit = () => {
 
             <!-- Email Address -->
             <div>
-                <label class="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-300">
+                <label
+                    class="mb-1.5 block text-xs font-semibold tracking-wider text-slate-300 uppercase"
+                >
                     Alamat Email <span class="text-rose-500">*</span>
                 </label>
                 <DarkTextInput
@@ -73,7 +84,10 @@ const submit = () => {
                     required
                     autocomplete="username"
                 />
-                <p v-if="form.errors.email" class="mt-1.5 text-xs text-rose-400">
+                <p
+                    v-if="form.errors.email"
+                    class="mt-1.5 text-xs text-rose-400"
+                >
                     {{ form.errors.email }}
                 </p>
 
@@ -84,7 +98,9 @@ const submit = () => {
 
             <!-- Asal Sekolah / Institusi -->
             <div>
-                <label class="mb-1.5 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-slate-300">
+                <label
+                    class="mb-1.5 flex items-center gap-1.5 text-xs font-semibold tracking-wider text-slate-300 uppercase"
+                >
                     <School class="h-3.5 w-3.5 text-slate-400" />
                     <span>Sekolah / Institusi</span>
                 </label>
@@ -93,23 +109,30 @@ const submit = () => {
                     type="text"
                     placeholder="Contoh: SMAN 1 Jakarta / Universitas / Kemendikbud"
                 />
-                <p v-if="form.errors.school" class="mt-1.5 text-xs text-rose-400">
+                <p
+                    v-if="form.errors.school"
+                    class="mt-1.5 text-xs text-rose-400"
+                >
                     {{ form.errors.school }}
                 </p>
             </div>
 
             <!-- Jenjang Tingkat Kelas (degrees) -->
             <div>
-                <label class="mb-1.5 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-slate-300">
+                <label
+                    class="mb-1.5 flex items-center gap-1.5 text-xs font-semibold tracking-wider text-slate-300 uppercase"
+                >
                     <GraduationCap class="h-3.5 w-3.5 text-slate-400" />
                     <span>Jenjang / Tingkat Kelas</span>
                 </label>
                 <div class="relative">
                     <select
                         v-model="form.id_degree"
-                        class="w-full appearance-none rounded-lg border border-[#1b344d] bg-[#0c1a28] px-4 py-3 text-sm text-white transition-all duration-150 focus:border-[#2e5984] focus:outline-none focus:ring-1 focus:ring-[#2e5984]"
+                        class="w-full appearance-none rounded-lg border border-[#1b344d] bg-[#0c1a28] px-4 py-3 text-sm text-white transition-all duration-150 focus:border-[#2e5984] focus:ring-1 focus:ring-[#2e5984] focus:outline-none"
                     >
-                        <option value="" class="bg-[#0c1a28] text-slate-500">Pilih Jenjang Kelas (Opsional)</option>
+                        <option value="" class="bg-[#0c1a28] text-slate-500">
+                            Pilih Jenjang Kelas (Opsional)
+                        </option>
                         <option
                             v-for="deg in degrees"
                             :key="deg.id_degree"
@@ -119,26 +142,49 @@ const submit = () => {
                             {{ deg.name }}
                         </option>
                     </select>
-                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3.5 text-slate-400">
-                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    <div
+                        class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3.5 text-slate-400"
+                    >
+                        <svg
+                            class="h-4 w-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M19 9l-7 7-7-7"
+                            />
                         </svg>
                     </div>
                 </div>
-                <p v-if="form.errors.id_degree" class="mt-1 text-xs text-rose-400">
+                <p
+                    v-if="form.errors.id_degree"
+                    class="mt-1 text-xs text-rose-400"
+                >
                     {{ form.errors.id_degree }}
                 </p>
             </div>
 
             <!-- Peran Hak Akses (Read-only badge info) -->
             <div>
-                <label class="mb-1.5 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-slate-300">
+                <label
+                    class="mb-1.5 flex items-center gap-1.5 text-xs font-semibold tracking-wider text-slate-300 uppercase"
+                >
                     <Shield class="h-3.5 w-3.5 text-[#e5a824]" />
                     <span>Peran Akun Sistem</span>
                 </label>
-                <div class="flex items-center gap-3 rounded-lg border border-[#14263b] bg-[#0c1c2e] px-4 py-3 text-sm">
-                    <span class="font-semibold text-white capitalize">{{ userRole }}</span>
-                    <span class="rounded bg-[#122840] px-2 py-0.5 text-[10px] font-medium text-slate-400">
+                <div
+                    class="flex items-center gap-3 rounded-lg border border-[#14263b] bg-[#0c1c2e] px-4 py-3 text-sm"
+                >
+                    <span class="font-semibold text-white capitalize">{{
+                        userRole
+                    }}</span>
+                    <span
+                        class="rounded bg-[#122840] px-2 py-0.5 text-[10px] font-medium text-slate-400"
+                    >
                         Dikelola Administrator
                     </span>
                 </div>
@@ -149,9 +195,12 @@ const submit = () => {
                 <button
                     type="submit"
                     :disabled="form.processing"
-                    class="inline-flex items-center justify-center gap-2 rounded-xl bg-[#e5a824] px-5 py-2.5 text-sm font-semibold text-black shadow-lg shadow-[#e5a824]/20 transition-all hover:bg-[#d49718] focus:outline-none focus:ring-2 focus:ring-[#e5a824] focus:ring-offset-2 focus:ring-offset-[#091624] disabled:opacity-60"
+                    class="inline-flex items-center justify-center gap-2 rounded-xl bg-[#e5a824] px-5 py-2.5 text-sm font-semibold text-black shadow-lg shadow-[#e5a824]/20 transition-all hover:bg-[#d49718] focus:ring-2 focus:ring-[#e5a824] focus:ring-offset-2 focus:ring-offset-[#091624] focus:outline-none disabled:opacity-60"
                 >
-                    <Loader2 v-if="form.processing" class="h-4 w-4 animate-spin text-black" />
+                    <Loader2
+                        v-if="form.processing"
+                        class="h-4 w-4 animate-spin text-black"
+                    />
                     <span>Simpan Perubahan</span>
                 </button>
 

@@ -1,7 +1,13 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProfileController;
-use Illuminate\Foundation\Application;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
+use App\Models\Material;
+use App\Models\Molecule;
+use App\Models\Question;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -10,10 +16,10 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    $userCount = \App\Models\User::count();
-    $moleculeCount = \App\Models\Molecule::count();
-    $materialCount = \App\Models\Material::count();
-    $questionCount = \App\Models\Question::count();
+    $userCount = User::count();
+    $moleculeCount = Molecule::count();
+    $materialCount = Material::count();
+    $questionCount = Question::count();
 
     return Inertia::render('Dashboard', [
         'stats' => [
@@ -31,17 +37,23 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Modul User
-    Route::get('users', [\App\Http\Controllers\UserController::class, 'index'])->middleware('permission:users.view')->name('users.index');
-    Route::post('users', [\App\Http\Controllers\UserController::class, 'store'])->middleware('permission:users.create')->name('users.store');
-    Route::put('users/{user}', [\App\Http\Controllers\UserController::class, 'update'])->middleware('permission:users.edit')->name('users.update');
-    Route::delete('users/{user}', [\App\Http\Controllers\UserController::class, 'destroy'])->middleware('permission:users.delete')->name('users.destroy');
+    Route::get('users', [UserController::class, 'index'])->middleware('permission:users.view')->name('users.index');
+    Route::post('users', [UserController::class, 'store'])->middleware('permission:users.create')->name('users.store');
+    Route::put('users/{user}', [UserController::class, 'update'])->middleware('permission:users.edit')->name('users.update');
+    Route::delete('users/{user}', [UserController::class, 'destroy'])->middleware('permission:users.delete')->name('users.destroy');
+
+    // Modul Kategori
+    Route::get('categories', [CategoryController::class, 'index'])->middleware('permission:categories.view')->name('categories.index');
+    Route::post('categories', [CategoryController::class, 'store'])->middleware('permission:categories.create')->name('categories.store');
+    Route::put('categories/{category}', [CategoryController::class, 'update'])->middleware('permission:categories.edit')->name('categories.update');
+    Route::delete('categories/{category}', [CategoryController::class, 'destroy'])->middleware('permission:categories.delete')->name('categories.destroy');
 
     // Modul RBAC & Hak Akses
-    Route::get('roles', [\App\Http\Controllers\RoleController::class, 'index'])->middleware('permission:roles.view')->name('roles.index');
-    Route::post('roles', [\App\Http\Controllers\RoleController::class, 'store'])->middleware('permission:roles.manage')->name('roles.store');
-    Route::put('roles/{role}', [\App\Http\Controllers\RoleController::class, 'update'])->middleware('permission:roles.manage')->name('roles.update');
-    Route::delete('roles/{role}', [\App\Http\Controllers\RoleController::class, 'destroy'])->middleware('permission:roles.manage')->name('roles.destroy');
-    Route::put('roles/{role}/permissions', [\App\Http\Controllers\RoleController::class, 'syncPermissions'])->middleware('permission:permissions.manage')->name('roles.permissions.update');
+    Route::get('roles', [RoleController::class, 'index'])->middleware('permission:roles.view')->name('roles.index');
+    Route::post('roles', [RoleController::class, 'store'])->middleware('permission:roles.manage')->name('roles.store');
+    Route::put('roles/{role}', [RoleController::class, 'update'])->middleware('permission:roles.manage')->name('roles.update');
+    Route::delete('roles/{role}', [RoleController::class, 'destroy'])->middleware('permission:roles.manage')->name('roles.destroy');
+    Route::put('roles/{role}/permissions', [RoleController::class, 'syncPermissions'])->middleware('permission:permissions.manage')->name('roles.permissions.update');
 });
 
 require __DIR__.'/auth.php';

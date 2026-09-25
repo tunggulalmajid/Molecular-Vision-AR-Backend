@@ -5,18 +5,17 @@ import ModalDialog from '@/Components/ModalDialog.vue';
 import DarkTextInput from '@/Components/DarkTextInput.vue';
 import { Loader2 } from 'lucide-vue-next';
 
-export interface RoleItem {
-    id: number;
+export interface CategoryItem {
+    id_category: number;
     name: string;
-    guard_name: string;
-    users_count?: number;
-    permissions?: { id: number; name: string }[];
-    created_at?: string;
+    description: string;
+    materials_count?: number;
+    questions_count?: number;
 }
 
 const props = defineProps<{
     show: boolean;
-    role: RoleItem | null;
+    category: CategoryItem | null;
 }>();
 
 const emit = defineEmits<{
@@ -25,6 +24,7 @@ const emit = defineEmits<{
 
 const form = useForm({
     name: '',
+    description: '',
 });
 
 watch(
@@ -36,8 +36,9 @@ watch(
             return;
         }
 
-        if (props.role) {
-            form.name = props.role.name;
+        if (props.category) {
+            form.name = props.category.name;
+            form.description = props.category.description;
         } else {
             form.reset();
         }
@@ -46,15 +47,15 @@ watch(
 );
 
 const submit = () => {
-    if (props.role) {
-        form.put(route('roles.update', props.role.id), {
+    if (props.category) {
+        form.put(route('categories.update', props.category.id_category), {
             preserveScroll: true,
             onSuccess: () => {
                 emit('close');
             },
         });
     } else {
-        form.post(route('roles.store'), {
+        form.post(route('categories.store'), {
             preserveScroll: true,
             onSuccess: () => {
                 emit('close');
@@ -67,29 +68,48 @@ const submit = () => {
 <template>
     <ModalDialog
         :show="show"
-        :title="role ? 'Edit Nama Peran' : 'Tambah Peran Baru'"
+        :title="category ? 'Edit Kategori' : 'Tambah Kategori Baru'"
         max-width="md"
         @close="$emit('close')"
     >
         <form @submit.prevent="submit" class="space-y-4">
+            <!-- Nama Kategori -->
             <div>
                 <label
                     class="mb-1.5 block text-xs font-semibold tracking-wider text-slate-300 uppercase"
                 >
-                    Nama Peran (Role) <span class="text-rose-500">*</span>
+                    Nama Kategori <span class="text-rose-500">*</span>
                 </label>
                 <DarkTextInput
                     v-model="form.name"
-                    placeholder="Contoh: guru, koordinator materi, kurator"
+                    placeholder="Contoh: Geometri Molekul, Ikatan Kimia"
                     required
                     autofocus
                 />
                 <p v-if="form.errors.name" class="mt-1 text-xs text-rose-400">
                     {{ form.errors.name }}
                 </p>
-                <p class="mt-1.5 text-xs text-slate-400">
-                    Nama peran akan otomatis dikonversi ke huruf kecil
-                    (lowercase) untuk konsistensi sistem.
+            </div>
+
+            <!-- Deskripsi Kategori -->
+            <div>
+                <label
+                    class="mb-1.5 block text-xs font-semibold tracking-wider text-slate-300 uppercase"
+                >
+                    Deskripsi Kategori <span class="text-rose-500">*</span>
+                </label>
+                <textarea
+                    v-model="form.description"
+                    rows="3"
+                    placeholder="Tuliskan penjelasan cakupan topik materi kimia ini..."
+                    required
+                    class="w-full rounded-lg border border-[#1b344d] bg-[#0c1a28] px-4 py-3 text-sm text-white placeholder-slate-500 transition-all duration-150 focus:border-[#2e5984] focus:ring-1 focus:ring-[#2e5984] focus:outline-none"
+                ></textarea>
+                <p
+                    v-if="form.errors.description"
+                    class="mt-1 text-xs text-rose-400"
+                >
+                    {{ form.errors.description }}
                 </p>
             </div>
 
@@ -112,7 +132,7 @@ const submit = () => {
                         class="h-4 w-4 animate-spin text-black"
                     />
                     <span>{{
-                        role ? 'Simpan Perubahan' : 'Tambah Peran'
+                        category ? 'Simpan Perubahan' : 'Tambah Kategori'
                     }}</span>
                 </button>
             </div>

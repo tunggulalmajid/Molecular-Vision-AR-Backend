@@ -40,7 +40,9 @@ const deleteUser = () => {
         @close="$emit('close')"
     >
         <div class="space-y-4">
-            <div class="flex items-start gap-3.5 rounded-lg border border-rose-500/20 bg-rose-500/10 p-3.5">
+            <div
+                class="flex items-start gap-3.5 rounded-lg border border-rose-500/20 bg-rose-500/10 p-3.5"
+            >
                 <div class="flex-shrink-0 text-rose-400">
                     <AlertTriangle class="h-5 w-5" />
                 </div>
@@ -48,14 +50,17 @@ const deleteUser = () => {
                     <p class="font-medium text-white">Perhatian!</p>
                     <p class="mt-0.5 text-xs text-slate-300">
                         Apakah Anda yakin ingin menghapus data pengguna
-                        <span class="font-bold text-rose-300">{{ user?.name }}</span>
+                        <span class="font-bold text-rose-300">{{
+                            user?.name
+                        }}</span>
                         ({{ user?.email }})?
                     </p>
                 </div>
             </div>
 
             <p class="text-xs text-slate-400">
-                Data pengguna akan dihapus dari sistem. Tindakan ini tidak dapat dibatalkan.
+                Data pengguna akan dihapus dari sistem. Tindakan ini tidak dapat
+                dibatalkan.
             </p>
 
             <!-- Action buttons -->
@@ -71,9 +76,12 @@ const deleteUser = () => {
                     type="button"
                     @click="deleteUser"
                     :disabled="form.processing"
-                    class="inline-flex items-center justify-center gap-2 rounded-lg bg-rose-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-rose-500 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2 focus:ring-offset-[#0b1726] disabled:opacity-60"
+                    class="inline-flex items-center justify-center gap-2 rounded-lg bg-rose-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-rose-500 focus:ring-2 focus:ring-rose-500 focus:ring-offset-2 focus:ring-offset-[#0b1726] focus:outline-none disabled:opacity-60"
                 >
-                    <Loader2 v-if="form.processing" class="h-4 w-4 animate-spin text-white" />
+                    <Loader2
+                        v-if="form.processing"
+                        class="h-4 w-4 animate-spin text-white"
+                    />
                     <span>Hapus</span>
                 </button>
             </div>

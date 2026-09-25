@@ -4,6 +4,7 @@ import { Link, usePage } from '@inertiajs/vue3';
 import {
     LayoutDashboard,
     Users,
+    Layers,
     Atom,
     BookOpen,
     ShieldCheck,
@@ -59,6 +60,13 @@ const navigation = computed(() => {
             show: can('users.view'),
         },
         {
+            name: 'Modul Kategori',
+            href: route('categories.index'),
+            active: route().current('categories.*'),
+            icon: Layers,
+            show: can('categories.view'),
+        },
+        {
             name: 'Modul Molekul',
             href: '#',
             active: false,
@@ -96,7 +104,10 @@ const toggleUserMenu = () => {
 };
 
 const handleClickOutside = (event: MouseEvent) => {
-    if (userMenuRef.value && !userMenuRef.value.contains(event.target as Node)) {
+    if (
+        userMenuRef.value &&
+        !userMenuRef.value.contains(event.target as Node)
+    ) {
         userMenuOpen.value = false;
     }
 };
@@ -125,7 +136,9 @@ onUnmounted(() => {
         <aside
             :class="[
                 'fixed inset-y-0 left-0 z-50 flex h-screen w-72 flex-col border-r border-[#14263b] bg-[#091624] transition-transform duration-300 ease-in-out',
-                mobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
+                mobileMenuOpen
+                    ? 'translate-x-0'
+                    : '-translate-x-full lg:translate-x-0',
             ]"
         >
             <!-- Top Branding Header -->
@@ -207,7 +220,7 @@ onUnmounted(() => {
                                 {{ userName }}
                             </p>
                             <p
-                                class="truncate text-[11px] capitalize text-slate-400"
+                                class="truncate text-[11px] text-slate-400 capitalize"
                             >
                                 {{ userRoleName }}
                             </p>
@@ -236,7 +249,7 @@ onUnmounted(() => {
                 >
                     <div
                         v-if="userMenuOpen"
-                        class="absolute bottom-16 right-4 z-50 w-48 rounded-xl border border-[#1b344d] bg-[#0c1c2e] p-1.5 shadow-2xl backdrop-blur-lg"
+                        class="absolute right-4 bottom-16 z-50 w-48 rounded-xl border border-[#1b344d] bg-[#0c1c2e] p-1.5 shadow-2xl backdrop-blur-lg"
                     >
                         <Link
                             :href="route('profile.edit')"
@@ -262,7 +275,9 @@ onUnmounted(() => {
         </aside>
 
         <!-- Main Content Area -->
-        <div class="flex min-h-screen min-w-0 flex-1 flex-col bg-[#06101c] lg:pl-72">
+        <div
+            class="flex min-h-screen min-w-0 flex-1 flex-col bg-[#06101c] lg:pl-72"
+        >
             <!-- Top Mobile Bar -->
             <header
                 class="flex h-16 items-center justify-between border-b border-[#14263b] bg-[#091624] px-4 lg:hidden"

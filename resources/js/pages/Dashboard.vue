@@ -22,7 +22,7 @@ const props = withDefaults(
             total_materi: 86,
             total_soal: 14290,
         }),
-    }
+    },
 );
 
 const formattedStats = computed(() => ({
@@ -39,22 +39,30 @@ const formattedStats = computed(() => ({
     <AuthenticatedLayout>
         <!-- Page Header -->
         <div class="mb-8">
-            <h1 class="text-2xl sm:text-3xl lg:text-[34px] font-bold tracking-tight text-white">
+            <h1
+                class="text-2xl font-bold tracking-tight text-white sm:text-3xl lg:text-[34px]"
+            >
                 Dashboard
             </h1>
-            <p class="mt-2 text-xs sm:text-sm text-slate-400 leading-relaxed max-w-2xl">
+            <p
+                class="mt-2 max-w-2xl text-xs leading-relaxed text-slate-400 sm:text-sm"
+            >
                 Pantau Ringkasan Data didalam MVAR
             </p>
         </div>
 
         <!-- Metric Stat Cards Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+        <div
+            class="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-4"
+        >
             <!-- Card 1: TOTAL USER -->
             <div
-                class="group rounded-xl border border-[#152a42] bg-[#0c1c2e] p-5 sm:p-6 transition-all duration-200 hover:border-[#224467] hover:shadow-lg hover:shadow-cyan-950/20"
+                class="group rounded-xl border border-[#152a42] bg-[#0c1c2e] p-5 transition-all duration-200 hover:border-[#224467] hover:shadow-lg hover:shadow-cyan-950/20 sm:p-6"
             >
                 <div class="flex items-center justify-between">
-                    <span class="text-[11px] font-bold tracking-wider text-slate-400 uppercase">
+                    <span
+                        class="text-[11px] font-bold tracking-wider text-slate-400 uppercase"
+                    >
                         TOTAL USER
                     </span>
                     <div
@@ -63,20 +71,24 @@ const formattedStats = computed(() => ({
                         <Users class="h-4.5 w-4.5" :size="18" />
                     </div>
                 </div>
-                <div class="mt-4 mb-2 text-3xl sm:text-[34px] font-bold tracking-tight text-white">
+                <div
+                    class="mt-4 mb-2 text-3xl font-bold tracking-tight text-white sm:text-[34px]"
+                >
                     {{ formattedStats.user }}
                 </div>
-                <p class="text-xs text-slate-400 leading-relaxed font-normal">
+                <p class="text-xs leading-relaxed font-normal text-slate-400">
                     Pengguna Terdaftar dalam sistem
                 </p>
             </div>
 
             <!-- Card 2: TOTAL MOLEKUL -->
             <div
-                class="group rounded-xl border border-[#152a42] bg-[#0c1c2e] p-5 sm:p-6 transition-all duration-200 hover:border-[#224467] hover:shadow-lg hover:shadow-cyan-950/20"
+                class="group rounded-xl border border-[#152a42] bg-[#0c1c2e] p-5 transition-all duration-200 hover:border-[#224467] hover:shadow-lg hover:shadow-cyan-950/20 sm:p-6"
             >
                 <div class="flex items-center justify-between">
-                    <span class="text-[11px] font-bold tracking-wider text-slate-400 uppercase">
+                    <span
+                        class="text-[11px] font-bold tracking-wider text-slate-400 uppercase"
+                    >
                         TOTAL MOLEKUL
                     </span>
                     <div
@@ -85,20 +97,24 @@ const formattedStats = computed(() => ({
                         <Atom class="h-4.5 w-4.5" :size="18" />
                     </div>
                 </div>
-                <div class="mt-4 mb-2 text-3xl sm:text-[34px] font-bold tracking-tight text-white">
+                <div
+                    class="mt-4 mb-2 text-3xl font-bold tracking-tight text-white sm:text-[34px]"
+                >
                     {{ formattedStats.molekul }}
                 </div>
-                <p class="text-xs text-slate-400 leading-relaxed font-normal">
+                <p class="text-xs leading-relaxed font-normal text-slate-400">
                     Materi Molekul Tersimpan dalam database
                 </p>
             </div>
 
             <!-- Card 3: TOTAL MATERI -->
             <div
-                class="group rounded-xl border border-[#152a42] bg-[#0c1c2e] p-5 sm:p-6 transition-all duration-200 hover:border-[#224467] hover:shadow-lg hover:shadow-cyan-950/20"
+                class="group rounded-xl border border-[#152a42] bg-[#0c1c2e] p-5 transition-all duration-200 hover:border-[#224467] hover:shadow-lg hover:shadow-cyan-950/20 sm:p-6"
             >
                 <div class="flex items-center justify-between">
-                    <span class="text-[11px] font-bold tracking-wider text-slate-400 uppercase">
+                    <span
+                        class="text-[11px] font-bold tracking-wider text-slate-400 uppercase"
+                    >
                         TOTAL MATERI
                     </span>
                     <div
@@ -107,20 +123,24 @@ const formattedStats = computed(() => ({
                         <BookOpen class="h-4.5 w-4.5" :size="18" />
                     </div>
                 </div>
-                <div class="mt-4 mb-2 text-3xl sm:text-[34px] font-bold tracking-tight text-white">
+                <div
+                    class="mt-4 mb-2 text-3xl font-bold tracking-tight text-white sm:text-[34px]"
+                >
                     {{ formattedStats.materi }}
                 </div>
-                <p class="text-xs text-slate-400 leading-relaxed font-normal">
+                <p class="text-xs leading-relaxed font-normal text-slate-400">
                     Materi Tersedia dalam database
                 </p>
             </div>
 
             <!-- Card 4: TOTAL SOAL -->
             <div
-                class="group rounded-xl border border-[#152a42] bg-[#0c1c2e] p-5 sm:p-6 transition-all duration-200 hover:border-[#224467] hover:shadow-lg hover:shadow-cyan-950/20"
+                class="group rounded-xl border border-[#152a42] bg-[#0c1c2e] p-5 transition-all duration-200 hover:border-[#224467] hover:shadow-lg hover:shadow-cyan-950/20 sm:p-6"
             >
                 <div class="flex items-center justify-between">
-                    <span class="text-[11px] font-bold tracking-wider text-slate-400 uppercase">
+                    <span
+                        class="text-[11px] font-bold tracking-wider text-slate-400 uppercase"
+                    >
                         TOTAL SOAL
                     </span>
                     <div
@@ -129,10 +149,12 @@ const formattedStats = computed(() => ({
                         <FileQuestion class="h-4.5 w-4.5" :size="18" />
                     </div>
                 </div>
-                <div class="mt-4 mb-2 text-3xl sm:text-[34px] font-bold tracking-tight text-white">
+                <div
+                    class="mt-4 mb-2 text-3xl font-bold tracking-tight text-white sm:text-[34px]"
+                >
                     {{ formattedStats.soal }}
                 </div>
-                <p class="text-xs text-slate-400 leading-relaxed font-normal">
+                <p class="text-xs leading-relaxed font-normal text-slate-400">
                     Tersedia untuk dikerjakan didalam databse
                 </p>
             </div>

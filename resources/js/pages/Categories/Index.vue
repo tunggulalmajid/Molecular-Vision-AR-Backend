@@ -6,20 +6,22 @@ import SearchBar from '@/Components/SearchBar.vue';
 import RefreshButton from '@/Components/RefreshButton.vue';
 import DataTable, { type TableHeader } from '@/Components/DataTable.vue';
 import Pagination, { type PaginationLink } from '@/Components/Pagination.vue';
-import UserFormModal, { type UserItem } from './UserFormModal.vue';
-import DeleteUserModal from './DeleteUserModal.vue';
+import CategoryFormModal, { type CategoryItem } from './CategoryFormModal.vue';
+import DeleteCategoryModal from './DeleteCategoryModal.vue';
+import { usePermission } from '@/composables/usePermission';
 import {
     Plus,
     Pencil,
     Trash2,
     CheckCircle2,
     AlertCircle,
+    Layers,
+    BookOpen,
+    FileQuestion,
 } from 'lucide-vue-next';
 
-import { usePermission } from '@/composables/usePermission';
-
-interface PaginatedUsers {
-    data: (UserItem & { created_at: string })[];
+interface PaginatedCategories {
+    data: CategoryItem[];
     links: PaginationLink[];
     from: number | null;
     to: number | null;
@@ -28,11 +30,10 @@ interface PaginatedUsers {
 }
 
 const props = defineProps<{
-    users: PaginatedUsers;
+    categories: PaginatedCategories;
     filters: {
         search: string;
     };
-    roles: string[];
 }>();
 
 const page = usePage();
@@ -48,19 +49,18 @@ const isRefreshing = ref(false);
 // Modal state
 const formModalOpen = ref(false);
 const deleteModalOpen = ref(false);
-const selectedUser = ref<UserItem | null>(null);
+const selectedCategory = ref<CategoryItem | null>(null);
 
-// Table configuration (conditional on edit/delete permissions)
+// Table configuration (conditional on permissions)
 const tableHeaders = computed<TableHeader[]>(() => {
     const headers: TableHeader[] = [
-        { label: 'PENGGUNA' },
-        { label: 'EMAIL' },
-        { label: 'SEKOLAH / INSTITUSI' },
-        { label: 'ROLE' },
-        { label: 'TANGGAL DAFTAR' },
+        { label: 'NAMA KATEGORI' },
+        { label: 'DESKRIPSI' },
+        { label: 'TOTAL MATERI' },
+        { label: 'TOTAL SOAL' },
     ];
 
-    if (can('users.edit') || can('users.delete')) {
+    if (can('categories.edit') || can('categories.delete')) {
         headers.push({ label: 'AKSI', align: 'center', width: '100px' });
     }
 
@@ -70,7 +70,7 @@ const tableHeaders = computed<TableHeader[]>(() => {
 // Search & Refresh handlers
 const handleSearch = (query: string) => {
     router.get(
-        route('users.index'),
+        route('categories.index'),
         { search: query },
         {
             preserveState: true,
@@ -83,7 +83,7 @@ const handleSearch = (query: string) => {
 const handleRefresh = () => {
     isRefreshing.value = true;
     router.reload({
-        only: ['users'],
+        only: ['categories'],
         onFinish: () => {
             isRefreshing.value = false;
         },
@@ -92,45 +92,34 @@ const handleRefresh = () => {
 
 // Modal Openers
 const openCreateModal = () => {
-    selectedUser.value = null;
+    selectedCategory.value = null;
     formModalOpen.value = true;
 };
 
-const openEditModal = (user: UserItem) => {
-    selectedUser.value = user;
+const openEditModal = (category: CategoryItem) => {
+    selectedCategory.value = category;
     formModalOpen.value = true;
 };
 
-const openDeleteModal = (user: UserItem) => {
-    selectedUser.value = user;
+const openDeleteModal = (category: CategoryItem) => {
+    selectedCategory.value = category;
     deleteModalOpen.value = true;
 };
 
-// Helpers
-const getInitials = (name: string): string => {
-    if (!name) return 'U';
-    const parts = name.trim().split(/\s+/);
-    if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
-    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-};
-
-const formatDate = (dateString?: string): string => {
-    if (!dateString) return '-';
-    try {
-        const date = new Date(dateString);
-        return new Intl.DateTimeFormat('id-ID', {
-            day: '2-digit',
-            month: 'short',
-            year: 'numeric',
-        }).format(date);
-    } catch {
-        return dateString;
-    }
+// Truncate helper for long text
+const truncateText = (
+    text: string | null | undefined,
+    maxLength = 80,
+): string => {
+    if (!text) return '-';
+    return text.length > maxLength
+        ? text.substring(0, maxLength) + '...'
+        : text;
 };
 </script>
 
 <template>
-    <Head title="Manajemen Pengguna" />
+    <Head title="Manajemen Kategori" />
 
     <AuthenticatedLayout>
         <div class="space-y-6">
@@ -156,21 +145,21 @@ const formatDate = (dateString?: string): string => {
             >
                 <div>
                     <h1 class="text-2xl font-bold tracking-tight text-white">
-                        Manajemen Pengguna
+                        Manajemen Kategori
                     </h1>
                     <p class="mt-1 text-sm text-slate-400">
-                        Kelola data seluruh pengguna, hak akses peran, serta
-                        akun institusi yang terdaftar di platform MVAR.
+                        Kelola data master kategori kimia untuk pengelompokan
+                        materi pembelajaran dan bank soal pada sistem MVAR.
                     </p>
                 </div>
 
-                <div v-if="can('users.create')" class="flex items-center">
+                <div v-if="can('categories.create')" class="flex items-center">
                     <button
                         @click="openCreateModal"
                         class="inline-flex items-center justify-center gap-2 rounded-xl bg-[#e5a824] px-4 py-2.5 text-sm font-semibold text-black shadow-lg shadow-[#e5a824]/20 transition-all hover:bg-[#d49718] focus:ring-2 focus:ring-[#e5a824] focus:ring-offset-2 focus:ring-offset-[#06101c] focus:outline-none"
                     >
                         <Plus class="h-4 w-4" />
-                        <span>Tambah Pengguna</span>
+                        <span>Tambah Kategori</span>
                     </button>
                 </div>
             </div>
@@ -182,7 +171,7 @@ const formatDate = (dateString?: string): string => {
                 <div class="w-full sm:max-w-md">
                     <SearchBar
                         v-model="searchQuery"
-                        placeholder="Cari berdasarkan nama, email, sekolah..."
+                        placeholder="Cari nama atau deskripsi kategori..."
                         @search="handleSearch"
                     />
                 </div>
@@ -201,88 +190,88 @@ const formatDate = (dateString?: string): string => {
             >
                 <DataTable
                     :headers="tableHeaders"
-                    :empty="users.data.length === 0"
-                    empty-message="Tidak ada data pengguna ditemukan."
+                    :empty="categories.data.length === 0"
+                    empty-message="Tidak ada kategori ditemukan."
                 >
                     <tr
-                        v-for="user in users.data"
-                        :key="user.id_user"
+                        v-for="cat in categories.data"
+                        :key="cat.id_category"
                         class="transition hover:bg-[#0c1c2e]"
                     >
-                        <!-- PENGGUNA -->
+                        <!-- NAMA KATEGORI -->
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-3">
-                                <div
-                                    class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border border-[#1f3e61] bg-[#102438] text-xs font-bold text-[#e5a824]"
-                                >
-                                    {{ getInitials(user.name) }}
-                                </div>
                                 <div>
-                                    <div class="font-medium text-white">
-                                        {{ user.name }}
-                                    </div>
-                                    <div class="text-xs text-slate-400">
-                                        ID: #{{ user.id_user }}
-                                    </div>
+                                    <span class="font-semibold text-white">
+                                        {{ cat.name }}
+                                    </span>
+                                    <span
+                                        class="ml-2 rounded bg-[#06121f] px-1.5 py-0.5 font-mono text-[10px] text-slate-500"
+                                    >
+                                        #{{ cat.id_category }}
+                                    </span>
                                 </div>
                             </div>
                         </td>
 
-                        <!-- EMAIL -->
-                        <td class="px-6 py-4">
-                            <span class="text-sm text-slate-300">
-                                {{ user.email }}
-                            </span>
-                        </td>
-
-                        <!-- SEKOLAH / INSTITUSI -->
-                        <td class="px-6 py-4">
-                            <span class="text-sm text-slate-300">
-                                {{ user.school || '-' }}
-                            </span>
-                        </td>
-
-                        <!-- ROLE (Plain text, no badge) -->
-                        <td class="px-6 py-4">
-                            <span
-                                class="text-sm font-medium text-slate-300 capitalize"
+                        <!-- DESKRIPSI -->
+                        <td class="max-w-sm px-6 py-4">
+                            <p
+                                class="text-sm break-all text-slate-300"
+                                :title="cat.description || undefined"
                             >
-                                {{
-                                    user.roles && user.roles.length > 0
-                                        ? user.roles[0].name
-                                        : '-'
-                                }}
-                            </span>
+                                {{ truncateText(cat.description, 80) }}
+                            </p>
                         </td>
 
-                        <!-- TANGGAL DAFTAR -->
+                        <!-- TOTAL MATERI -->
                         <td class="px-6 py-4">
-                            <span class="text-sm text-slate-400">
-                                {{ formatDate(user.created_at) }}
-                            </span>
+                            <div
+                                class="inline-flex items-center gap-1.5 rounded-lg border border-[#1a344f] bg-[#0a1827] px-2.5 py-1 text-xs font-medium text-sky-400"
+                            >
+                                <BookOpen class="h-3.5 w-3.5 text-sky-400" />
+                                <span
+                                    >{{ cat.materials_count || 0 }} Materi</span
+                                >
+                            </div>
+                        </td>
+
+                        <!-- TOTAL SOAL -->
+                        <td class="px-6 py-4">
+                            <div
+                                class="inline-flex items-center gap-1.5 rounded-lg border border-[#1a344f] bg-[#0a1827] px-2.5 py-1 text-xs font-medium text-amber-400"
+                            >
+                                <FileQuestion
+                                    class="h-3.5 w-3.5 text-amber-400"
+                                />
+                                <span>{{ cat.questions_count || 0 }} Soal</span>
+                            </div>
                         </td>
 
                         <!-- AKSI (Icon only) -->
                         <td
-                            v-if="can('users.edit') || can('users.delete')"
+                            v-if="
+                                can('categories.edit') ||
+                                can('categories.delete')
+                            "
                             class="px-6 py-4"
                         >
                             <div class="flex items-center justify-center gap-2">
                                 <button
-                                    v-if="can('users.edit')"
-                                    @click="openEditModal(user)"
+                                    v-if="can('categories.edit')"
+                                    @click="openEditModal(cat)"
                                     class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[#1b344d] bg-[#0c1a28] text-slate-300 transition hover:border-[#e5a824]/50 hover:bg-[#14263b] hover:text-[#e5a824] focus:outline-none"
-                                    title="Edit Pengguna"
-                                    aria-label="Edit Pengguna"
+                                    title="Edit Kategori"
+                                    aria-label="Edit Kategori"
                                 >
                                     <Pencil class="h-4 w-4" />
                                 </button>
                                 <button
-                                    v-if="can('users.delete')"
-                                    @click="openDeleteModal(user)"
+                                    v-if="can('categories.delete')"
+                                    @click="openDeleteModal(cat)"
                                     class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[#1b344d] bg-[#0c1a28] text-slate-300 transition hover:border-rose-500/50 hover:bg-rose-500/10 hover:text-rose-400 focus:outline-none"
-                                    title="Hapus Pengguna"
-                                    aria-label="Hapus Pengguna"
+                                    title="Hapus Kategori"
+                                    aria-label="Hapus Kategori"
                                 >
                                     <Trash2 class="h-4 w-4" />
                                 </button>
@@ -293,27 +282,26 @@ const formatDate = (dateString?: string): string => {
 
                 <!-- Pagination Component -->
                 <Pagination
-                    :links="users.links"
-                    :from="users.from"
-                    :to="users.to"
-                    :total="users.total"
-                    item-name="pengguna"
+                    :links="categories.links"
+                    :from="categories.from"
+                    :to="categories.to"
+                    :total="categories.total"
+                    item-name="kategori"
                 />
             </div>
         </div>
 
-        <!-- Create / Edit User Modal -->
-        <UserFormModal
+        <!-- Create / Edit Category Modal -->
+        <CategoryFormModal
             :show="formModalOpen"
-            :user="selectedUser"
-            :roles="roles"
+            :category="selectedCategory"
             @close="formModalOpen = false"
         />
 
         <!-- Delete Confirmation Modal -->
-        <DeleteUserModal
+        <DeleteCategoryModal
             :show="deleteModalOpen"
-            :user="selectedUser"
+            :category="selectedCategory"
             @close="deleteModalOpen = false"
         />
     </AuthenticatedLayout>

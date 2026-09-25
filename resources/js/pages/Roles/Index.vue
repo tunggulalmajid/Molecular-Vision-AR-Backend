@@ -52,8 +52,18 @@ const flashError = computed(() => page.props.flash?.error);
 // Tab Navigation State
 const activeTab = ref<'roles' | 'permissions'>('roles');
 const tabs = computed<TabItem[]>(() => [
-    { id: 'roles', label: 'Daftar Peran (Roles)', icon: Users, count: props.roles.total },
-    { id: 'permissions', label: 'Katalog Hak Akses', icon: KeyRound, count: props.total_permissions_count },
+    {
+        id: 'roles',
+        label: 'Daftar Peran (Roles)',
+        icon: Users,
+        count: props.roles.total,
+    },
+    {
+        id: 'permissions',
+        label: 'Katalog Hak Akses',
+        icon: KeyRound,
+        count: props.total_permissions_count,
+    },
 ]);
 
 // Search & Refresh State
@@ -85,7 +95,9 @@ const tableHeaders = computed<TableHeader[]>(() => {
 
 // System role check
 const isSystemRole = (name: string): boolean => {
-    return ['super admin', 'admin', 'siswa (mobile)'].includes(name.toLowerCase());
+    return ['super admin', 'admin', 'siswa (mobile)'].includes(
+        name.toLowerCase(),
+    );
 };
 
 const isSuperAdmin = (name: string): boolean => {
@@ -101,7 +113,7 @@ const handleSearch = (query: string) => {
             preserveState: true,
             preserveScroll: true,
             replace: true,
-        }
+        },
     );
 };
 
@@ -174,20 +186,23 @@ const formatDate = (dateString?: string): string => {
             </div>
 
             <!-- Page Header -->
-            <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div
+                class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
+            >
                 <div>
                     <h1 class="text-2xl font-bold tracking-tight text-white">
                         Manajemen Peran & Hak Akses (RBAC)
                     </h1>
                     <p class="mt-1 text-sm text-slate-400">
-                        Atur peran pengguna, batasan akses per modul, dan konfigurasi izin otorisasi sistem MVAR.
+                        Atur peran pengguna, batasan akses per modul, dan
+                        konfigurasi izin otorisasi sistem MVAR.
                     </p>
                 </div>
 
                 <div v-if="can('roles.manage')" class="flex items-center">
                     <button
                         @click="openCreateModal"
-                        class="inline-flex items-center justify-center gap-2 rounded-xl bg-[#e5a824] px-4 py-2.5 text-sm font-semibold text-black shadow-lg shadow-[#e5a824]/20 transition-all hover:bg-[#d49718] focus:outline-none focus:ring-2 focus:ring-[#e5a824] focus:ring-offset-2 focus:ring-offset-[#06101c]"
+                        class="inline-flex items-center justify-center gap-2 rounded-xl bg-[#e5a824] px-4 py-2.5 text-sm font-semibold text-black shadow-lg shadow-[#e5a824]/20 transition-all hover:bg-[#d49718] focus:ring-2 focus:ring-[#e5a824] focus:ring-offset-2 focus:ring-offset-[#06101c] focus:outline-none"
                     >
                         <Plus class="h-4 w-4" />
                         <span>Tambah Peran</span>
@@ -196,13 +211,15 @@ const formatDate = (dateString?: string): string => {
             </div>
 
             <!-- Tab Navigation & Actions Toolbar -->
-            <div class="flex flex-col items-start justify-between gap-4 border-b border-[#14263b] pb-4 sm:flex-row sm:items-center">
-                <TabNav 
-                    :tabs="tabs"
-                    v-model="activeTab"
-                />
+            <div
+                class="flex flex-col items-start justify-between gap-4 border-b border-[#14263b] pb-4 sm:flex-row sm:items-center"
+            >
+                <TabNav :tabs="tabs" v-model="activeTab" />
 
-                <div v-if="activeTab === 'roles'" class="flex items-center gap-2 sm:w-auto">
+                <div
+                    v-if="activeTab === 'roles'"
+                    class="flex items-center gap-2 sm:w-auto"
+                >
                     <div class="w-full sm:w-64">
                         <SearchBar
                             v-model="searchQuery"
@@ -218,7 +235,10 @@ const formatDate = (dateString?: string): string => {
             </div>
 
             <!-- TAB 1: DAFTAR PERAN (ROLES) -->
-            <div v-if="activeTab === 'roles'" class="rounded-xl border border-[#14263b] bg-[#091624] shadow-xl">
+            <div
+                v-if="activeTab === 'roles'"
+                class="rounded-xl border border-[#14263b] bg-[#091624] shadow-xl"
+            >
                 <DataTable
                     :headers="tableHeaders"
                     :empty="roles.data.length === 0"
@@ -232,12 +252,14 @@ const formatDate = (dateString?: string): string => {
                         <!-- NAMA PERAN -->
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-2.5">
-                                <span class="font-semibold text-white capitalize">
+                                <span
+                                    class="font-semibold text-white capitalize"
+                                >
                                     {{ role.name }}
                                 </span>
                                 <span
                                     v-if="isSuperAdmin(role.name)"
-                                    class="rounded bg-[#e5a824]/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#e5a824]"
+                                    class="rounded bg-[#e5a824]/20 px-2 py-0.5 text-[10px] font-bold tracking-wider text-[#e5a824] uppercase"
                                 >
                                     System
                                 </span>
@@ -252,7 +274,9 @@ const formatDate = (dateString?: string): string => {
 
                         <!-- GUARD -->
                         <td class="px-6 py-4">
-                            <code class="rounded bg-[#06121f] px-2 py-1 text-xs text-slate-300 font-mono">
+                            <code
+                                class="rounded bg-[#06121f] px-2 py-1 font-mono text-xs text-slate-300"
+                            >
                                 {{ role.guard_name }}
                             </code>
                         </td>
@@ -277,7 +301,8 @@ const formatDate = (dateString?: string): string => {
                                 v-else
                                 class="text-sm font-medium text-slate-300"
                             >
-                                {{ role.permissions?.length || 0 }} / {{ total_permissions_count }} Izin
+                                {{ role.permissions?.length || 0 }} /
+                                {{ total_permissions_count }} Izin
                             </span>
                         </td>
 
@@ -289,8 +314,15 @@ const formatDate = (dateString?: string): string => {
                         </td>
 
                         <!-- AKSI (Icon only) -->
-                        <td v-if="can('permissions.manage') || can('roles.manage')" class="px-6 py-4">
-                            <div class="flex items-center justify-center gap-1.5">
+                        <td
+                            v-if="
+                                can('permissions.manage') || can('roles.manage')
+                            "
+                            class="px-6 py-4"
+                        >
+                            <div
+                                class="flex items-center justify-center gap-1.5"
+                            >
                                 <!-- Configure Permissions Button -->
                                 <button
                                     v-if="can('permissions.manage')"
@@ -315,7 +347,7 @@ const formatDate = (dateString?: string): string => {
                                     </button>
                                     <span
                                         v-else
-                                        class="inline-flex h-8 w-8 items-center justify-center text-slate-600 cursor-not-allowed"
+                                        class="inline-flex h-8 w-8 cursor-not-allowed items-center justify-center text-slate-600"
                                         title="Peran bawaan sistem terkunci"
                                     >
                                         <Lock class="h-3.5 w-3.5" />
@@ -324,7 +356,11 @@ const formatDate = (dateString?: string): string => {
 
                                 <!-- Delete Role Button (Hidden/Disabled for system roles) -->
                                 <button
-                                    v-if="can('roles.manage') && !isSystemRole(role.name) && (role.users_count || 0) === 0"
+                                    v-if="
+                                        can('roles.manage') &&
+                                        !isSystemRole(role.name) &&
+                                        (role.users_count || 0) === 0
+                                    "
                                     @click="openDeleteModal(role)"
                                     class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[#1b344d] bg-[#0c1a28] text-slate-300 transition hover:border-rose-500/50 hover:bg-rose-500/10 hover:text-rose-400 focus:outline-none"
                                     title="Hapus Peran"
@@ -349,13 +385,17 @@ const formatDate = (dateString?: string): string => {
 
             <!-- TAB 2: KATALOG MASTER HAK AKSES -->
             <div v-else class="space-y-6">
-                <div class="rounded-xl border border-[#14263b] bg-[#091624] p-5 shadow-xl">
+                <div
+                    class="rounded-xl border border-[#14263b] bg-[#091624] p-5 shadow-xl"
+                >
                     <div class="mb-4">
                         <h2 class="text-base font-bold text-white">
                             Katalog Master Hak Akses (Permissions)
                         </h2>
                         <p class="mt-1 text-xs text-slate-400">
-                            Berikut adalah seluruh permission terstandar yang terdaftar di sistem MVAR, dikelompokkan berdasarkan modul fungsional.
+                            Berikut adalah seluruh permission terstandar yang
+                            terdaftar di sistem MVAR, dikelompokkan berdasarkan
+                            modul fungsional.
                         </p>
                     </div>
 
@@ -365,31 +405,48 @@ const formatDate = (dateString?: string): string => {
                             :key="moduleName"
                             class="overflow-hidden rounded-xl border border-[#14263b] bg-[#0c1c2e]"
                         >
-                            <div class="border-b border-[#14263b] bg-[#081523] px-4 py-3">
-                                <span class="text-sm font-bold text-white tracking-wide">
+                            <div
+                                class="border-b border-[#14263b] bg-[#081523] px-4 py-3"
+                            >
+                                <span
+                                    class="text-sm font-bold tracking-wide text-white"
+                                >
                                     {{ moduleName }}
                                 </span>
                             </div>
 
-                            <div class="grid grid-cols-1 divide-y divide-[#13253b] sm:grid-cols-2 sm:divide-y-0 sm:divide-x sm:divide-[#13253b]">
+                            <div
+                                class="grid grid-cols-1 divide-y divide-[#13253b] sm:grid-cols-2 sm:divide-x sm:divide-y-0 sm:divide-[#13253b]"
+                            >
                                 <div
                                     v-for="p in perms"
                                     :key="p.name"
                                     class="flex items-start gap-3 p-4"
                                 >
-                                    <div class="rounded-lg bg-[#14283f] p-2 text-[#e5a824]">
+                                    <div
+                                        class="rounded-lg bg-[#14283f] p-2 text-[#e5a824]"
+                                    >
                                         <KeyRound class="h-4 w-4" />
                                     </div>
-                                    <div class="flex-1 min-w-0">
-                                        <div class="flex items-center justify-between gap-2">
-                                            <p class="text-xs font-semibold text-white">
+                                    <div class="min-w-0 flex-1">
+                                        <div
+                                            class="flex items-center justify-between gap-2"
+                                        >
+                                            <p
+                                                class="text-xs font-semibold text-white"
+                                            >
                                                 {{ p.label }}
                                             </p>
-                                            <code class="rounded bg-[#071320] px-1.5 py-0.5 text-[10px] text-slate-400 font-mono">
+                                            <code
+                                                class="rounded bg-[#071320] px-1.5 py-0.5 font-mono text-[10px] text-slate-400"
+                                            >
                                                 {{ p.name }}
                                             </code>
                                         </div>
-                                        <p v-if="p.description" class="mt-1 text-[11px] text-slate-400">
+                                        <p
+                                            v-if="p.description"
+                                            class="mt-1 text-[11px] text-slate-400"
+                                        >
                                             {{ p.description }}
                                         </p>
                                     </div>

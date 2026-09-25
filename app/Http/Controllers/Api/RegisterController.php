@@ -3,14 +3,12 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Degree;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
-use Illuminate\Validation\ValidationException;
 use Spatie\Permission\Models\Role;
 
 class RegisterController extends Controller
@@ -34,7 +32,7 @@ class RegisterController extends Controller
 
         $validated = $request->validate($rules);
 
-        $user = DB::transaction(function () use ($validated, $request) {
+        $user = DB::transaction(function () use ($validated) {
             $siswaRole = Role::where('name', 'siswa (mobile)')->first();
 
             $user = User::create([

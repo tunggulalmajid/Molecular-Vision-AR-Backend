@@ -46,14 +46,16 @@ watch(
             form.email = props.user.email || '';
             form.school = props.user.school || '';
             form.password = '';
-            form.role = props.user.roles?.[0]?.name || (props.roles.length > 0 ? props.roles[0] : '');
+            form.role =
+                props.user.roles?.[0]?.name ||
+                (props.roles.length > 0 ? props.roles[0] : '');
         } else {
             // Create Mode
             form.reset();
             form.role = props.roles.length > 0 ? props.roles[0] : '';
         }
         form.clearErrors();
-    }
+    },
 );
 
 const submit = () => {
@@ -85,7 +87,9 @@ const submit = () => {
         <form @submit.prevent="submit" class="space-y-4">
             <!-- Nama Lengkap -->
             <div>
-                <label class="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-300">
+                <label
+                    class="mb-1.5 block text-xs font-semibold tracking-wider text-slate-300 uppercase"
+                >
                     Nama Lengkap <span class="text-rose-500">*</span>
                 </label>
                 <DarkTextInput
@@ -100,7 +104,9 @@ const submit = () => {
 
             <!-- Email Address -->
             <div>
-                <label class="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-300">
+                <label
+                    class="mb-1.5 block text-xs font-semibold tracking-wider text-slate-300 uppercase"
+                >
                     Email <span class="text-rose-500">*</span>
                 </label>
                 <DarkTextInput
@@ -116,7 +122,9 @@ const submit = () => {
 
             <!-- Asal Sekolah / Institusi -->
             <div>
-                <label class="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-300">
+                <label
+                    class="mb-1.5 block text-xs font-semibold tracking-wider text-slate-300 uppercase"
+                >
                     Sekolah / Institusi
                 </label>
                 <DarkTextInput
@@ -130,16 +138,24 @@ const submit = () => {
 
             <!-- Role Selection -->
             <div>
-                <label class="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-300">
+                <label
+                    class="mb-1.5 block text-xs font-semibold tracking-wider text-slate-300 uppercase"
+                >
                     Role Hak Akses <span class="text-rose-500">*</span>
                 </label>
                 <div class="relative">
                     <select
                         v-model="form.role"
                         required
-                        class="w-full appearance-none rounded-lg border border-[#1b344d] bg-[#0c1a28] px-4 py-3 text-sm text-white transition-all duration-150 focus:border-[#2e5984] focus:outline-none focus:ring-1 focus:ring-[#2e5984]"
+                        class="w-full appearance-none rounded-lg border border-[#1b344d] bg-[#0c1a28] px-4 py-3 text-sm text-white transition-all duration-150 focus:border-[#2e5984] focus:ring-1 focus:ring-[#2e5984] focus:outline-none"
                     >
-                        <option value="" disabled class="bg-[#0c1a28] text-slate-500">Pilih Role</option>
+                        <option
+                            value=""
+                            disabled
+                            class="bg-[#0c1a28] text-slate-500"
+                        >
+                            Pilih Role
+                        </option>
                         <option
                             v-for="roleName in roles"
                             :key="roleName"
@@ -149,9 +165,21 @@ const submit = () => {
                             {{ roleName }}
                         </option>
                     </select>
-                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3.5 text-slate-400">
-                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    <div
+                        class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3.5 text-slate-400"
+                    >
+                        <svg
+                            class="h-4 w-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M19 9l-7 7-7-7"
+                            />
                         </svg>
                     </div>
                 </div>
@@ -163,7 +191,9 @@ const submit = () => {
             <!-- Password -->
             <div>
                 <div class="mb-1.5 flex items-center justify-between">
-                    <label class="text-xs font-semibold uppercase tracking-wider text-slate-300">
+                    <label
+                        class="text-xs font-semibold tracking-wider text-slate-300 uppercase"
+                    >
                         Password
                         <span v-if="!user" class="text-rose-500">*</span>
                     </label>
@@ -174,11 +204,18 @@ const submit = () => {
                 <DarkTextInput
                     v-model="form.password"
                     type="password"
-                    :placeholder="user ? 'Biarkan kosong untuk mempertahankan password lama' : 'Minimal 8 karakter'"
+                    :placeholder="
+                        user
+                            ? 'Biarkan kosong untuk mempertahankan password lama'
+                            : 'Minimal 8 karakter'
+                    "
                     :required="!user"
                     :show-password-toggle="true"
                 />
-                <p v-if="form.errors.password" class="mt-1 text-xs text-rose-400">
+                <p
+                    v-if="form.errors.password"
+                    class="mt-1 text-xs text-rose-400"
+                >
                     {{ form.errors.password }}
                 </p>
             </div>
@@ -195,10 +232,15 @@ const submit = () => {
                 <button
                     type="submit"
                     :disabled="form.processing"
-                    class="inline-flex items-center justify-center gap-2 rounded-lg bg-[#e5a824] px-5 py-2.5 text-sm font-semibold text-black transition-all hover:bg-[#d49718] focus:outline-none focus:ring-2 focus:ring-[#e5a824] focus:ring-offset-2 focus:ring-offset-[#0b1726] disabled:opacity-60"
+                    class="inline-flex items-center justify-center gap-2 rounded-lg bg-[#e5a824] px-5 py-2.5 text-sm font-semibold text-black transition-all hover:bg-[#d49718] focus:ring-2 focus:ring-[#e5a824] focus:ring-offset-2 focus:ring-offset-[#0b1726] focus:outline-none disabled:opacity-60"
                 >
-                    <Loader2 v-if="form.processing" class="h-4 w-4 animate-spin text-black" />
-                    <span>{{ user ? 'Simpan Perubahan' : 'Tambah Pengguna' }}</span>
+                    <Loader2
+                        v-if="form.processing"
+                        class="h-4 w-4 animate-spin text-black"
+                    />
+                    <span>{{
+                        user ? 'Simpan Perubahan' : 'Tambah Pengguna'
+                    }}</span>
                 </button>
             </div>
         </form>

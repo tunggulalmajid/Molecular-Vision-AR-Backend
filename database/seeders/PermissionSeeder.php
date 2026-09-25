@@ -24,6 +24,12 @@ class PermissionSeeder extends Seeder
                 'users.edit' => 'Ubah Data Pengguna',
                 'users.delete' => 'Hapus Pengguna',
             ],
+            'Modul Kategori' => [
+                'categories.view' => 'Lihat Daftar Kategori',
+                'categories.create' => 'Tambah Kategori Baru',
+                'categories.edit' => 'Ubah Data Kategori',
+                'categories.delete' => 'Hapus Kategori',
+            ],
             'Modul Molekul' => [
                 'molecules.view' => 'Lihat Katalog Molekul',
                 'molecules.create' => 'Tambah Molekul Baru',
@@ -71,6 +77,10 @@ class PermissionSeeder extends Seeder
         if ($adminRole) {
             $adminRole->syncPermissions([
                 'users.view',
+                'categories.view',
+                'categories.create',
+                'categories.edit',
+                'categories.delete',
                 'molecules.view',
                 'molecules.create',
                 'molecules.edit',

@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { useForm } from '@inertiajs/vue3';
 import ModalDialog from '@/Components/ModalDialog.vue';
-import type { RoleItem } from './RoleFormModal.vue';
+import type { CategoryItem } from './CategoryFormModal.vue';
 import { AlertTriangle, Loader2 } from 'lucide-vue-next';
 
 const props = defineProps<{
     show: boolean;
-    role: RoleItem | null;
+    category: CategoryItem | null;
 }>();
 
 const emit = defineEmits<{
@@ -15,10 +15,10 @@ const emit = defineEmits<{
 
 const form = useForm({});
 
-const deleteRole = () => {
-    if (!props.role) return;
+const deleteCategory = () => {
+    if (!props.category) return;
 
-    form.delete(route('roles.destroy', props.role.id), {
+    form.delete(route('categories.destroy', props.category.id_category), {
         preserveScroll: true,
         onSuccess: () => {
             emit('close');
@@ -30,7 +30,7 @@ const deleteRole = () => {
 <template>
     <ModalDialog
         :show="show"
-        title="Konfirmasi Hapus Peran"
+        title="Konfirmasi Hapus Kategori"
         max-width="md"
         @close="$emit('close')"
     >
@@ -44,18 +44,30 @@ const deleteRole = () => {
                 <div class="text-sm text-slate-300">
                     <p class="font-medium text-white">Perhatian!</p>
                     <p class="mt-0.5 text-xs text-slate-300">
-                        Apakah Anda yakin ingin menghapus peran
-                        <span class="font-bold text-rose-300 capitalize">{{
-                            role?.name
+                        Apakah Anda yakin ingin menghapus kategori
+                        <span class="font-bold text-rose-300">{{
+                            category?.name
                         }}</span
                         >?
                     </p>
                 </div>
             </div>
 
+            <div
+                v-if="
+                    (category?.materials_count || 0) > 0 ||
+                    (category?.questions_count || 0) > 0
+                "
+                class="rounded-lg border border-amber-500/20 bg-amber-500/10 p-3 text-xs text-amber-300"
+            >
+                Peringatan: Kategori ini memiliki
+                <strong>{{ category?.materials_count || 0 }} materi</strong> dan
+                <strong>{{ category?.questions_count || 0 }} soal</strong>.
+                Kategori tidak dapat dihapus jika masih memiliki data terkait.
+            </div>
+
             <p class="text-xs text-slate-400">
-                Peran yang dihapus tidak dapat dipulihkan. Pastikan tidak ada
-                pengguna yang sedang menggunakan peran ini.
+                Data kategori yang dihapus tidak dapat dipulihkan.
             </p>
 
             <!-- Action buttons -->
@@ -69,7 +81,7 @@ const deleteRole = () => {
                 </button>
                 <button
                     type="button"
-                    @click="deleteRole"
+                    @click="deleteCategory"
                     :disabled="form.processing"
                     class="inline-flex items-center justify-center gap-2 rounded-lg bg-rose-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-rose-500 focus:ring-2 focus:ring-rose-500 focus:ring-offset-2 focus:ring-offset-[#0b1726] focus:outline-none disabled:opacity-60"
                 >
@@ -77,7 +89,7 @@ const deleteRole = () => {
                         v-if="form.processing"
                         class="h-4 w-4 animate-spin text-white"
                     />
-                    <span>Hapus Peran</span>
+                    <span>Hapus Kategori</span>
                 </button>
             </div>
         </div>

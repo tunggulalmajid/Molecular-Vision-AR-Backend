@@ -17,7 +17,7 @@ const props = withDefaults(
     }>(),
     {
         disabled: false,
-    }
+    },
 );
 
 const emit = defineEmits<{
@@ -37,7 +37,8 @@ const someSelected = computed(() => {
 });
 
 const selectedCount = computed(() => {
-    return props.permissions.filter((p) => props.modelValue.includes(p.name)).length;
+    return props.permissions.filter((p) => props.modelValue.includes(p.name))
+        .length;
 });
 
 const toggleSelectAll = () => {
@@ -48,7 +49,9 @@ const toggleSelectAll = () => {
 
     if (allSelected.value) {
         // Deselect all in this module
-        updated = props.modelValue.filter((name) => !modulePermNames.includes(name));
+        updated = props.modelValue.filter(
+            (name) => !modulePermNames.includes(name),
+        );
     } else {
         // Select all in this module
         const combined = new Set([...props.modelValue, ...modulePermNames]);
@@ -73,14 +76,20 @@ const togglePermission = (name: string) => {
 </script>
 
 <template>
-    <div class="overflow-hidden rounded-xl border border-[#14263b] bg-[#0c1c2e] transition hover:border-[#1a3552]">
+    <div
+        class="overflow-hidden rounded-xl border border-[#14263b] bg-[#0c1c2e] transition hover:border-[#1a3552]"
+    >
         <!-- Module Group Header -->
-        <div class="flex items-center justify-between border-b border-[#14263b] bg-[#091624]/90 px-4 py-3 sm:px-5">
+        <div
+            class="flex items-center justify-between border-b border-[#14263b] bg-[#091624]/90 px-4 py-3 sm:px-5"
+        >
             <div class="flex items-center gap-3">
-                <span class="text-sm font-bold text-white tracking-wide">
+                <span class="text-sm font-bold tracking-wide text-white">
                     {{ moduleName }}
                 </span>
-                <span class="rounded-full bg-[#12273e] px-2.5 py-0.5 text-[11px] font-medium text-slate-300">
+                <span
+                    class="rounded-full bg-[#12273e] px-2.5 py-0.5 text-[11px] font-medium text-slate-300"
+                >
                     {{ selectedCount }} / {{ permissions.length }} Izin Aktif
                 </span>
             </div>
@@ -119,20 +128,28 @@ const togglePermission = (name: string) => {
                             : 'border-[#1f3c5c] bg-[#0c1a28] group-hover:border-slate-400',
                     ]"
                 >
-                    <Check v-if="modelValue.includes(perm.name)" class="h-3.5 w-3.5 stroke-[3]" />
+                    <Check
+                        v-if="modelValue.includes(perm.name)"
+                        class="h-3.5 w-3.5 stroke-[3]"
+                    />
                 </div>
 
                 <!-- Label & Key -->
-                <div class="flex-1 min-w-0">
+                <div class="min-w-0 flex-1">
                     <div class="flex items-center justify-between gap-2">
                         <span class="text-xs font-semibold text-white">
                             {{ perm.label }}
                         </span>
-                        <code class="rounded bg-[#071320] px-1.5 py-0.5 text-[10px] text-slate-400 font-mono">
+                        <code
+                            class="rounded bg-[#071320] px-1.5 py-0.5 font-mono text-[10px] text-slate-400"
+                        >
                             {{ perm.name }}
                         </code>
                     </div>
-                    <p v-if="perm.description" class="mt-1 text-[11px] leading-tight text-slate-400">
+                    <p
+                        v-if="perm.description"
+                        class="mt-1 text-[11px] leading-tight text-slate-400"
+                    >
                         {{ perm.description }}
                     </p>
                 </div>

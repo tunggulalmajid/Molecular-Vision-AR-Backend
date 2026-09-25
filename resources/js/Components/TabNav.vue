@@ -19,7 +19,9 @@ defineEmits<{
 </script>
 
 <template>
-    <div class="inline-flex flex-wrap items-center gap-1.5 rounded-xl border border-[#14263b] bg-[#091624] p-1.5 shadow-sm">
+    <div
+        class="inline-flex flex-wrap items-center gap-1.5 rounded-xl border border-[#14263b] bg-[#091624] p-1.5 shadow-sm"
+    >
         <button
             v-for="tab in tabs"
             :key="tab.id"

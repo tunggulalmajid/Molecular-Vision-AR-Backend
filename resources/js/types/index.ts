@@ -14,4 +14,3 @@ export type PageProps<
     flash?: FlashMessages;
     [key: string]: unknown;
 };
-

@@ -20,7 +20,7 @@ withDefaults(
         to: 0,
         total: 0,
         itemName: 'data',
-    }
+    },
 );
 
 const cleanLabel = (label: string) => {
@@ -40,7 +40,9 @@ const cleanLabel = (label: string) => {
         <!-- Summary Info -->
         <p class="text-xs text-slate-400">
             Menampilkan
-            <span class="font-semibold text-slate-200">{{ from ?? 0 }}-{{ to ?? 0 }}</span>
+            <span class="font-semibold text-slate-200"
+                >{{ from ?? 0 }}-{{ to ?? 0 }}</span
+            >
             dari
             <span class="font-semibold text-slate-200">{{ total ?? 0 }}</span>
             {{ itemName }}

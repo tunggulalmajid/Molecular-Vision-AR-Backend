@@ -80,8 +80,12 @@ const formatDate = (dateString?: string): string => {
             </div>
 
             <!-- Page Header Card -->
-            <div class="rounded-xl border border-[#14263b] bg-[#091624] p-6 shadow-xl sm:p-8">
-                <div class="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+            <div
+                class="rounded-xl border border-[#14263b] bg-[#091624] p-6 shadow-xl sm:p-8"
+            >
+                <div
+                    class="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between"
+                >
                     <div class="flex items-center gap-5">
                         <!-- Big Avatar with Gold Ring -->
                         <div
@@ -92,7 +96,9 @@ const formatDate = (dateString?: string): string => {
 
                         <div>
                             <div class="flex items-center gap-2.5">
-                                <h1 class="text-xl font-bold text-white sm:text-2xl">
+                                <h1
+                                    class="text-xl font-bold text-white sm:text-2xl"
+                                >
                                     {{ user?.name }}
                                 </h1>
                                 <span
@@ -112,24 +118,39 @@ const formatDate = (dateString?: string): string => {
 
                     <!-- Meta Badges (Role & School & Degree) -->
                     <div class="flex flex-wrap items-center gap-2">
-                        <div class="flex items-center gap-1.5 rounded-lg border border-[#1b344d] bg-[#0c1a28] px-3 py-1.5 text-xs text-slate-300">
+                        <div
+                            class="flex items-center gap-1.5 rounded-lg border border-[#1b344d] bg-[#0c1a28] px-3 py-1.5 text-xs text-slate-300"
+                        >
                             <Shield class="h-3.5 w-3.5 text-[#e5a824]" />
-                            <span class="font-semibold text-white capitalize">{{ roleName }}</span>
+                            <span class="font-semibold text-white capitalize">{{
+                                roleName
+                            }}</span>
                         </div>
 
-                        <div v-if="user?.school" class="flex items-center gap-1.5 rounded-lg border border-[#1b344d] bg-[#0c1a28] px-3 py-1.5 text-xs text-slate-300">
+                        <div
+                            v-if="user?.school"
+                            class="flex items-center gap-1.5 rounded-lg border border-[#1b344d] bg-[#0c1a28] px-3 py-1.5 text-xs text-slate-300"
+                        >
                             <School class="h-3.5 w-3.5 text-sky-400" />
                             <span>{{ user.school }}</span>
                         </div>
 
-                        <div v-if="user?.degree?.name" class="flex items-center gap-1.5 rounded-lg border border-[#1b344d] bg-[#0c1a28] px-3 py-1.5 text-xs text-slate-300">
+                        <div
+                            v-if="user?.degree?.name"
+                            class="flex items-center gap-1.5 rounded-lg border border-[#1b344d] bg-[#0c1a28] px-3 py-1.5 text-xs text-slate-300"
+                        >
                             <GraduationCap class="h-3.5 w-3.5 text-amber-400" />
                             <span>{{ user.degree.name }}</span>
                         </div>
 
-                        <div class="flex items-center gap-1.5 rounded-lg border border-[#1b344d] bg-[#0c1a28] px-3 py-1.5 text-xs text-slate-400">
+                        <div
+                            class="flex items-center gap-1.5 rounded-lg border border-[#1b344d] bg-[#0c1a28] px-3 py-1.5 text-xs text-slate-400"
+                        >
                             <Calendar class="h-3.5 w-3.5 text-slate-500" />
-                            <span>Bergabung {{ formatDate(user?.created_at) }}</span>
+                            <span
+                                >Bergabung
+                                {{ formatDate(user?.created_at) }}</span
+                            >
                         </div>
                     </div>
                 </div>

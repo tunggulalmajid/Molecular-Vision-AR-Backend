@@ -2,7 +2,9 @@
 import { computed, ref, watch } from 'vue';
 import { useForm } from '@inertiajs/vue3';
 import ModalDialog from '@/Components/ModalDialog.vue';
-import PermissionGroupCard, { type PermissionDefinition } from '@/Components/PermissionGroupCard.vue';
+import PermissionGroupCard, {
+    type PermissionDefinition,
+} from '@/Components/PermissionGroupCard.vue';
 import type { RoleItem } from './RoleFormModal.vue';
 import { ShieldCheck, AlertCircle, Loader2 } from 'lucide-vue-next';
 
@@ -18,7 +20,9 @@ const emit = defineEmits<{
 }>();
 
 const selectedPermissions = ref<string[]>([]);
-const isSuperAdmin = computed(() => props.role?.name?.toLowerCase() === 'super admin');
+const isSuperAdmin = computed(
+    () => props.role?.name?.toLowerCase() === 'super admin',
+);
 
 const allAvailablePermissions = computed(() => {
     const list: string[] = [];
@@ -39,12 +43,14 @@ watch(
             if (isSuperAdmin.value) {
                 selectedPermissions.value = [...allAvailablePermissions.value];
             } else {
-                selectedPermissions.value = (props.role.permissions || []).map((p) => p.name);
+                selectedPermissions.value = (props.role.permissions || []).map(
+                    (p) => p.name,
+                );
             }
         } else {
             selectedPermissions.value = [];
         }
-    }
+    },
 );
 
 const selectAllGlobal = () => {
@@ -89,19 +95,31 @@ const submit = () => {
             >
                 <ShieldCheck class="h-5 w-5 flex-shrink-0 text-[#e5a824]" />
                 <div>
-                    <p class="font-bold text-[#e5a824]">Peran Super Administrator</p>
+                    <p class="font-bold text-[#e5a824]">
+                        Peran Super Administrator
+                    </p>
                     <p class="mt-0.5 leading-relaxed text-slate-300">
-                        Peran ini secara otomatis memiliki hak akses penuh (bypass) terhadap seluruh modul dan fungsionalitas di sistem MVAR.
+                        Peran ini secara otomatis memiliki hak akses penuh
+                        (bypass) terhadap seluruh modul dan fungsionalitas di
+                        sistem MVAR.
                     </p>
                 </div>
             </div>
 
             <!-- Toolbar Header: Stats & Global Quick Actions -->
-            <div v-if="!isSuperAdmin" class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-[#14263b] pb-3">
+            <div
+                v-if="!isSuperAdmin"
+                class="flex flex-col gap-3 border-b border-[#14263b] pb-3 sm:flex-row sm:items-center sm:justify-between"
+            >
                 <div class="flex items-center gap-2">
-                    <span class="text-xs text-slate-400">Total Izin Terpilih:</span>
-                    <span class="rounded-md bg-[#13273c] px-2 py-0.5 text-xs font-bold text-[#e5a824]">
-                        {{ selectedPermissions.length }} / {{ allAvailablePermissions.length }}
+                    <span class="text-xs text-slate-400"
+                        >Total Izin Terpilih:</span
+                    >
+                    <span
+                        class="rounded-md bg-[#13273c] px-2 py-0.5 text-xs font-bold text-[#e5a824]"
+                    >
+                        {{ selectedPermissions.length }} /
+                        {{ allAvailablePermissions.length }}
                     </span>
                 </div>
 
@@ -136,7 +154,9 @@ const submit = () => {
             </div>
 
             <!-- Modal Action Buttons -->
-            <div class="flex items-center justify-end gap-3 border-t border-[#14263b] pt-4">
+            <div
+                class="flex items-center justify-end gap-3 border-t border-[#14263b] pt-4"
+            >
                 <button
                     type="button"
                     @click="$emit('close')"
@@ -149,9 +169,12 @@ const submit = () => {
                     type="button"
                     @click="submit"
                     :disabled="form.processing"
-                    class="inline-flex items-center justify-center gap-2 rounded-lg bg-[#e5a824] px-5 py-2.5 text-sm font-semibold text-black transition-all hover:bg-[#d49718] focus:outline-none focus:ring-2 focus:ring-[#e5a824] focus:ring-offset-2 focus:ring-offset-[#0b1726] disabled:opacity-60"
+                    class="inline-flex items-center justify-center gap-2 rounded-lg bg-[#e5a824] px-5 py-2.5 text-sm font-semibold text-black transition-all hover:bg-[#d49718] focus:ring-2 focus:ring-[#e5a824] focus:ring-offset-2 focus:ring-offset-[#0b1726] focus:outline-none disabled:opacity-60"
                 >
-                    <Loader2 v-if="form.processing" class="h-4 w-4 animate-spin text-black" />
+                    <Loader2
+                        v-if="form.processing"
+                        class="h-4 w-4 animate-spin text-black"
+                    />
                     <span>Simpan Hak Akses</span>
                 </button>
             </div>

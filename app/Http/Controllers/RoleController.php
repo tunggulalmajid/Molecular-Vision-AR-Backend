@@ -13,6 +13,8 @@ class RoleController extends Controller
 {
     /**
      * Master module groupings with descriptive labels.
+     *
+     * @var array<string, list<array{name: string, label: string, description: string}>>
      */
     private array $modulePermissions = [
         'Modul User' => [
@@ -20,6 +22,12 @@ class RoleController extends Controller
             ['name' => 'users.create', 'label' => 'Tambah Pengguna Baru', 'description' => 'Membuat akun pengguna dan memilih peran'],
             ['name' => 'users.edit', 'label' => 'Ubah Data Pengguna', 'description' => 'Mengubah data nama, email, sekolah, dan role'],
             ['name' => 'users.delete', 'label' => 'Hapus Pengguna', 'description' => 'Menghapus akun pengguna dari sistem'],
+        ],
+        'Modul Kategori' => [
+            ['name' => 'categories.view', 'label' => 'Lihat Daftar Kategori', 'description' => 'Melihat daftar kategori kimia'],
+            ['name' => 'categories.create', 'label' => 'Tambah Kategori Baru', 'description' => 'Menambahkan kategori kimia baru'],
+            ['name' => 'categories.edit', 'label' => 'Ubah Data Kategori', 'description' => 'Mengubah nama dan deskripsi kategori'],
+            ['name' => 'categories.delete', 'label' => 'Hapus Kategori', 'description' => 'Menghapus kategori master dari sistem'],
         ],
         'Modul Molekul' => [
             ['name' => 'molecules.view', 'label' => 'Lihat Katalog Molekul', 'description' => 'Melihat daftar molekul kimia dan visualisasi 3D'],
@@ -102,7 +110,7 @@ class RoleController extends Controller
         }
 
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:50', 'unique:roles,name,' . $role->id],
+            'name' => ['required', 'string', 'max:50', 'unique:roles,name,'.$role->id],
         ]);
 
         $role->update([
@@ -123,7 +131,7 @@ class RoleController extends Controller
         }
 
         if ($role->users()->count() > 0) {
-            return redirect()->route('roles.index')->with('error', 'Peran tidak dapat dihapus karena masih digunakan oleh ' . $role->users()->count() . ' pengguna aktif.');
+            return redirect()->route('roles.index')->with('error', 'Peran tidak dapat dihapus karena masih digunakan oleh '.$role->users()->count().' pengguna aktif.');
         }
 
         $role->delete();
@@ -148,6 +156,6 @@ class RoleController extends Controller
         $permissions = $validated['permissions'] ?? [];
         $role->syncPermissions($permissions);
 
-        return redirect()->route('roles.index')->with('success', 'Hak akses untuk peran "' . $role->name . '" berhasil diperbarui.');
+        return redirect()->route('roles.index')->with('success', 'Hak akses untuk peran "'.$role->name.'" berhasil diperbarui.');
     }
 }

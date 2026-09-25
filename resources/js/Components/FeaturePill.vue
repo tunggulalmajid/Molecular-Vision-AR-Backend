@@ -11,6 +11,8 @@ defineProps<{
         <div class="flex shrink-0 items-center justify-center text-slate-300">
             <slot name="icon" />
         </div>
-        <span class="leading-snug tracking-wide text-slate-300">{{ text }}</span>
+        <span class="leading-snug tracking-wide text-slate-300">{{
+            text
+        }}</span>
     </div>
 </template>
