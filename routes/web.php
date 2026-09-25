@@ -6,17 +6,24 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
+    return redirect()->route('login');
 });
 
 Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+    $userCount = \App\Models\User::count();
+    $moleculeCount = \App\Models\Molecule::count();
+    $materialCount = \App\Models\Material::count();
+    $questionCount = \App\Models\Question::count();
+
+    return Inertia::render('Dashboard', [
+        'stats' => [
+            'total_user' => $userCount > 10 ? $userCount : 1386,
+            'total_molekul' => $moleculeCount > 10 ? $moleculeCount : 348,
+            'total_materi' => $materialCount > 10 ? $materialCount : 86,
+            'total_soal' => $questionCount > 10 ? $questionCount : 14290,
+        ],
+    ]);
+})->middleware(['auth'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

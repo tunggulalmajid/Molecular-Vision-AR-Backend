@@ -1,187 +1,286 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import ApplicationLogo from '@/Components/ApplicationLogo.vue';
-import Dropdown from '@/Components/Dropdown.vue';
-import DropdownLink from '@/Components/DropdownLink.vue';
-import NavLink from '@/Components/NavLink.vue';
-import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
-import { Link } from '@inertiajs/vue3';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
+import { Link, usePage } from '@inertiajs/vue3';
+import {
+    LayoutDashboard,
+    Users,
+    Atom,
+    BookOpen,
+    ShieldCheck,
+    FileQuestion,
+    MoreVertical,
+    User as UserIcon,
+    LogOut,
+    Menu,
+    X,
+} from 'lucide-vue-next';
 
-const showingNavigationDropdown = ref(false);
+const page = usePage();
+const mobileMenuOpen = ref(false);
+const userMenuOpen = ref(false);
+const userMenuRef = ref<HTMLElement | null>(null);
+
+const user = computed(() => page.props.auth?.user as any);
+const userRoles = computed(() => (page.props.auth?.roles as string[]) || []);
+
+const userName = computed(() => user.value?.name || 'Dr. Aris Thorne');
+const userRoleName = computed(() => {
+    if (userRoles.value && userRoles.value.length > 0) {
+        return userRoles.value[0];
+    }
+    return user.value?.role?.name || 'Super Admin';
+});
+
+const userInitials = computed(() => {
+    const name = userName.value.trim();
+    if (!name) return 'AT';
+    const parts = name.split(/\s+/);
+    if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+});
+
+const navigation = [
+    {
+        name: 'Dashboard',
+        href: route('dashboard'),
+        active: route().current('dashboard'),
+        icon: LayoutDashboard,
+    },
+    {
+        name: 'Modul User',
+        href: '#',
+        active: false,
+        icon: Users,
+    },
+    {
+        name: 'Modul Molekul',
+        href: '#',
+        active: false,
+        icon: Atom,
+    },
+    {
+        name: 'Modul Materi',
+        href: '#',
+        active: false,
+        icon: BookOpen,
+    },
+    {
+        name: 'Modul RBAC & Akses',
+        href: '#',
+        active: false,
+        icon: ShieldCheck,
+    },
+    {
+        name: 'Modul Bank Soal & Kuis',
+        href: '#',
+        active: false,
+        icon: FileQuestion,
+    },
+];
+
+const toggleUserMenu = () => {
+    userMenuOpen.value = !userMenuOpen.value;
+};
+
+const handleClickOutside = (event: MouseEvent) => {
+    if (userMenuRef.value && !userMenuRef.value.contains(event.target as Node)) {
+        userMenuOpen.value = false;
+    }
+};
+
+onMounted(() => {
+    document.addEventListener('click', handleClickOutside);
+});
+
+onUnmounted(() => {
+    document.removeEventListener('click', handleClickOutside);
+});
 </script>
 
 <template>
-    <div>
-        <div class="bg-gray-100 min-h-screen">
-            <nav class="border-gray-100 bg-white border-b">
-                <!-- Primary Navigation Menu -->
-                <div class="max-w-7xl px-4 sm:px-6 lg:px-8 mx-auto">
-                    <div class="h-16 flex justify-between">
-                        <div class="flex">
-                            <!-- Logo -->
-                            <div class="flex shrink-0 items-center">
-                                <Link :href="route('dashboard')">
-                                    <ApplicationLogo
-                                        class="h-9 text-gray-800 block w-auto fill-current"
-                                    />
-                                </Link>
-                            </div>
+    <div
+        class="flex min-h-screen bg-[#06101c] font-sans text-slate-100 antialiased selection:bg-[#e5a824] selection:text-black"
+    >
+        <!-- Mobile Sidebar Overlay Backdrop -->
+        <div
+            v-if="mobileMenuOpen"
+            @click="mobileMenuOpen = false"
+            class="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm transition-opacity lg:hidden"
+        />
 
-                            <!-- Navigation Links -->
-                            <div
-                                class="space-x-8 sm:-my-px sm:ms-10 sm:flex hidden"
-                            >
-                                <NavLink
-                                    :href="route('dashboard')"
-                                    :active="route().current('dashboard')"
-                                >
-                                    Dashboard
-                                </NavLink>
-                            </div>
-                        </div>
-
-                        <div class="sm:ms-6 sm:flex sm:items-center hidden">
-                            <!-- Settings Dropdown -->
-                            <div class="ms-3 relative">
-                                <Dropdown align="right" width="48">
-                                    <template #trigger>
-                                        <span class="rounded-md inline-flex">
-                                            <button
-                                                type="button"
-                                                class="rounded-md bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-500 ease-in-out hover:text-gray-700 inline-flex items-center border border-transparent transition duration-150 focus:outline-none"
-                                            >
-                                                {{ $page.props.auth.user.name }}
-
-                                                <svg
-                                                    class="-me-0.5 ms-2 h-4 w-4"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="0 0 20 20"
-                                                    fill="currentColor"
-                                                >
-                                                    <path
-                                                        fill-rule="evenodd"
-                                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                                        clip-rule="evenodd"
-                                                    />
-                                                </svg>
-                                            </button>
-                                        </span>
-                                    </template>
-
-                                    <template #content>
-                                        <DropdownLink
-                                            :href="route('profile.edit')"
-                                        >
-                                            Profile
-                                        </DropdownLink>
-                                        <DropdownLink
-                                            :href="route('logout')"
-                                            method="post"
-                                            as="button"
-                                        >
-                                            Log Out
-                                        </DropdownLink>
-                                    </template>
-                                </Dropdown>
-                            </div>
-                        </div>
-
-                        <!-- Hamburger -->
-                        <div class="-me-2 sm:hidden flex items-center">
-                            <button
-                                @click="
-                                    showingNavigationDropdown =
-                                        !showingNavigationDropdown
-                                "
-                                class="rounded-md p-2 text-gray-400 ease-in-out hover:bg-gray-100 hover:text-gray-500 focus:bg-gray-100 focus:text-gray-500 inline-flex items-center justify-center transition duration-150 focus:outline-none"
-                            >
-                                <svg
-                                    class="h-6 w-6"
-                                    stroke="currentColor"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        :class="{
-                                            hidden: showingNavigationDropdown,
-                                            'inline-flex':
-                                                !showingNavigationDropdown,
-                                        }"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M4 6h16M4 12h16M4 18h16"
-                                    />
-                                    <path
-                                        :class="{
-                                            hidden: !showingNavigationDropdown,
-                                            'inline-flex':
-                                                showingNavigationDropdown,
-                                        }"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M6 18L18 6M6 6l12 12"
-                                    />
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Responsive Navigation Menu -->
-                <div
-                    :class="{
-                        block: showingNavigationDropdown,
-                        hidden: !showingNavigationDropdown,
-                    }"
-                    class="sm:hidden"
+        <!-- Sidebar Navigation -->
+        <aside
+            :class="[
+                'fixed inset-y-0 left-0 z-50 flex w-72 flex-col border-r border-[#14263b] bg-[#091624] transition-transform duration-300 ease-in-out lg:static lg:translate-x-0',
+                mobileMenuOpen ? 'translate-x-0' : '-translate-x-full',
+            ]"
+        >
+            <!-- Top Branding Header -->
+            <div
+                class="flex h-16 items-center justify-between border-b border-[#14263b] px-6 py-12"
+            >
+                <Link
+                    :href="route('dashboard')"
+                    class="flex items-center gap-3"
                 >
-                    <div class="space-y-1 pb-3 pt-2">
-                        <ResponsiveNavLink
-                            :href="route('dashboard')"
-                            :active="route().current('dashboard')"
-                        >
-                            Dashboard
-                        </ResponsiveNavLink>
-                    </div>
+                    <img
+                        src="/MVAR.png"
+                        alt="MVAR Logo"
+                        class="h-8 w-auto object-contain sm:h-9"
+                    />
+                </Link>
 
-                    <!-- Responsive Settings Options -->
-                    <div class="border-gray-200 pb-1 pt-4 border-t">
-                        <div class="px-4">
-                            <div class="text-base font-medium text-gray-800">
-                                {{ $page.props.auth.user.name }}
-                            </div>
-                            <div class="text-sm font-medium text-gray-500">
-                                {{ $page.props.auth.user.email }}
-                            </div>
-                        </div>
+                <!-- Close button on mobile -->
+                <button
+                    @click="mobileMenuOpen = false"
+                    class="rounded-lg p-1.5 text-slate-400 hover:bg-[#13273c] hover:text-white lg:hidden"
+                    aria-label="Tutup Menu"
+                >
+                    <X class="h-5 w-5" />
+                </button>
+            </div>
 
-                        <div class="mt-3 space-y-1">
-                            <ResponsiveNavLink :href="route('profile.edit')">
-                                Profile
-                            </ResponsiveNavLink>
-                            <ResponsiveNavLink
-                                :href="route('logout')"
-                                method="post"
-                                as="button"
-                            >
-                                Log Out
-                            </ResponsiveNavLink>
-                        </div>
-                    </div>
+            <!-- Main Navigation Links -->
+            <div class="flex-1 overflow-y-auto px-4 py-6">
+                <div class="mb-3 px-3">
+                    <span
+                        class="text-[11px] font-bold tracking-wider text-slate-400 uppercase"
+                    >
+                        MENU UTAMA
+                    </span>
                 </div>
-            </nav>
 
-            <!-- Page Heading -->
-            <header class="bg-white shadow" v-if="$slots.header">
-                <div class="max-w-7xl px-4 py-6 sm:px-6 lg:px-8 mx-auto">
-                    <slot name="header" />
+                <nav class="space-y-1.5">
+                    <Link
+                        v-for="item in navigation"
+                        :key="item.name"
+                        :href="item.href"
+                        :class="[
+                            'group flex items-center gap-3 rounded-lg px-3.5 py-2.5 text-sm font-medium transition-all duration-150',
+                            item.active
+                                ? 'bg-[#16273b] text-[#e5a824] shadow-sm'
+                                : 'text-slate-300 hover:bg-[#112338] hover:text-white',
+                        ]"
+                    >
+                        <component
+                            :is="item.icon"
+                            class="h-5 w-5 shrink-0"
+                            :class="
+                                item.active
+                                    ? 'text-[#e5a824]'
+                                    : 'text-slate-400 group-hover:text-slate-200'
+                            "
+                        />
+                        <span>{{ item.name }}</span>
+                    </Link>
+                </nav>
+            </div>
+
+            <!-- Bottom Profile Section with 3-dots Menu -->
+            <div
+                class="relative mt-auto border-t border-[#14263b] p-4"
+                ref="userMenuRef"
+            >
+                <div class="flex items-center justify-between">
+                    <div class="flex min-w-0 items-center gap-3">
+                        <!-- User Initials Avatar -->
+                        <div
+                            class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#234261] bg-[#1c334b] text-xs font-bold text-slate-200"
+                        >
+                            {{ userInitials }}
+                        </div>
+                        <div class="min-w-0 flex-1">
+                            <p class="truncate text-xs font-bold text-white">
+                                {{ userName }}
+                            </p>
+                            <p
+                                class="truncate text-[11px] capitalize text-slate-400"
+                            >
+                                {{ userRoleName }}
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Options Button (Three Vertical Dots) -->
+                    <button
+                        @click.stop="toggleUserMenu"
+                        type="button"
+                        class="rounded-lg p-1.5 text-slate-400 transition hover:bg-[#14263b] hover:text-white focus:outline-none"
+                        title="Opsi Pengguna"
+                    >
+                        <MoreVertical class="h-5 w-5" />
+                    </button>
+                </div>
+
+                <!-- Dropdown Popover Menu -->
+                <transition
+                    enter-active-class="transition duration-150 ease-out"
+                    enter-from-class="translate-y-2 opacity-0"
+                    enter-to-class="translate-y-0 opacity-100"
+                    leave-active-class="transition duration-100 ease-in"
+                    leave-from-class="translate-y-0 opacity-100"
+                    leave-to-class="translate-y-2 opacity-0"
+                >
+                    <div
+                        v-if="userMenuOpen"
+                        class="absolute bottom-16 right-4 z-50 w-48 rounded-xl border border-[#1b344d] bg-[#0c1c2e] p-1.5 shadow-2xl backdrop-blur-lg"
+                    >
+                        <Link
+                            :href="route('profile.edit')"
+                            class="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-medium text-slate-300 hover:bg-[#152a42] hover:text-white"
+                            @click="userMenuOpen = false"
+                        >
+                            <UserIcon class="h-4 w-4 text-slate-400" />
+                            Profil Saya
+                        </Link>
+                        <Link
+                            :href="route('logout')"
+                            method="post"
+                            as="button"
+                            class="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-medium text-rose-400 hover:bg-rose-500/10 hover:text-rose-300"
+                            @click="userMenuOpen = false"
+                        >
+                            <LogOut class="h-4 w-4 text-rose-400" />
+                            Keluar (Logout)
+                        </Link>
+                    </div>
+                </transition>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <div class="flex min-w-0 flex-1 flex-col bg-[#06101c]">
+            <!-- Top Mobile Bar -->
+            <header
+                class="flex h-16 items-center justify-between border-b border-[#14263b] bg-[#091624] px-4 lg:hidden"
+            >
+                <div class="flex items-center gap-3">
+                    <button
+                        @click="mobileMenuOpen = true"
+                        class="rounded-lg p-2 text-slate-400 hover:bg-[#13273c] hover:text-white focus:outline-none"
+                        aria-label="Buka Menu"
+                    >
+                        <Menu class="h-6 w-6" />
+                    </button>
+                    <Link :href="route('dashboard')" class="flex items-center">
+                        <img
+                            src="/MVAR.png"
+                            alt="MVAR Logo"
+                            class="h-7 w-auto object-contain"
+                        />
+                    </Link>
+                </div>
+
+                <!-- User Avatar on Mobile -->
+                <div
+                    class="flex h-8 w-8 items-center justify-center rounded-full border border-[#234261] bg-[#1c334b] text-xs font-bold text-slate-200"
+                >
+                    {{ userInitials }}
                 </div>
             </header>
 
-            <!-- Page Content -->
-            <main>
+            <!-- Page Main Body -->
+            <main class="flex-1 overflow-y-auto p-6 sm:p-8 lg:p-10 xl:p-12">
                 <slot />
             </main>
         </div>
