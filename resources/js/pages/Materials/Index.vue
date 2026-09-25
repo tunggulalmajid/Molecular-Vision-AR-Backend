@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { Head, router, usePage } from '@inertiajs/vue3';
+import { Head, Link, router, usePage } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import SearchBar from '@/Components/SearchBar.vue';
 import RefreshButton from '@/Components/RefreshButton.vue';
 import DataTable, { type TableHeader } from '@/Components/DataTable.vue';
 import Pagination, { type PaginationLink } from '@/Components/Pagination.vue';
-import CategoryFormModal, { type CategoryItem } from './CategoryFormModal.vue';
-import DeleteCategoryModal from './DeleteCategoryModal.vue';
+import DeleteMaterialModal, {
+    type MaterialItem,
+} from './DeleteMaterialModal.vue';
 import { usePermission } from '@/composables/usePermission';
 import {
     Plus,
@@ -17,11 +18,17 @@ import {
     AlertCircle,
     Layers,
     BookOpen,
-    FileQuestion,
+    Calendar,
+    Filter,
 } from 'lucide-vue-next';
 
-interface PaginatedCategories {
-    data: CategoryItem[];
+interface CategoryOption {
+    id_category: number;
+    name: string;
+}
+
+interface PaginatedMaterials {
+    data: MaterialItem[];
     links: PaginationLink[];
     from: number | null;
     to: number | null;
@@ -30,9 +37,11 @@ interface PaginatedCategories {
 }
 
 const props = defineProps<{
-    categories: PaginatedCategories;
+    materials: PaginatedMaterials;
+    categories: CategoryOption[];
     filters: {
         search: string;
+        category_id: string | number;
     };
 }>();
 
@@ -42,36 +51,39 @@ const { can } = usePermission();
 const flashSuccess = computed(() => page.props.flash?.success);
 const flashError = computed(() => page.props.flash?.error);
 
-// State
+// Filters State
 const searchQuery = ref(props.filters.search || '');
+const selectedCategory = ref(props.filters.category_id || '');
 const isRefreshing = ref(false);
 
-// Modal state
-const formModalOpen = ref(false);
+// Delete Modal State
 const deleteModalOpen = ref(false);
-const selectedCategory = ref<CategoryItem | null>(null);
+const materialToDelete = ref<MaterialItem | null>(null);
 
 // Table configuration (conditional on permissions)
 const tableHeaders = computed<TableHeader[]>(() => {
     const headers: TableHeader[] = [
-        { label: 'NAMA KATEGORI' },
+        { label: 'NAMA MATERI' },
+        { label: 'KATEGORI' },
         { label: 'DESKRIPSI' },
-        { label: 'TOTAL MATERI' },
-        { label: 'TOTAL SOAL' },
+        { label: 'TANGGAL' },
     ];
 
-    if (can('categories.edit') || can('categories.delete')) {
+    if (can('materials.edit') || can('materials.delete')) {
         headers.push({ label: 'AKSI', align: 'center', width: '100px' });
     }
 
     return headers;
 });
 
-// Search & Refresh handlers
-const handleSearch = (query: string) => {
+// Search & Filter handlers
+const applyFilters = () => {
     router.get(
-        route('categories.index'),
-        { search: query },
+        route('materials.index'),
+        {
+            search: searchQuery.value || undefined,
+            category_id: selectedCategory.value || undefined,
+        },
         {
             preserveState: true,
             preserveScroll: true,
@@ -80,33 +92,31 @@ const handleSearch = (query: string) => {
     );
 };
 
+const handleSearch = (query: string) => {
+    searchQuery.value = query;
+    applyFilters();
+};
+
+const handleCategoryChange = () => {
+    applyFilters();
+};
+
 const handleRefresh = () => {
     isRefreshing.value = true;
     router.reload({
-        only: ['categories'],
+        only: ['materials'],
         onFinish: () => {
             isRefreshing.value = false;
         },
     });
 };
 
-// Modal Openers
-const openCreateModal = () => {
-    selectedCategory.value = null;
-    formModalOpen.value = true;
-};
-
-const openEditModal = (category: CategoryItem) => {
-    selectedCategory.value = category;
-    formModalOpen.value = true;
-};
-
-const openDeleteModal = (category: CategoryItem) => {
-    selectedCategory.value = category;
+const openDeleteModal = (material: MaterialItem) => {
+    materialToDelete.value = material;
     deleteModalOpen.value = true;
 };
 
-// Truncate helper for long text
+// Truncate helper for long descriptions with ellipsis
 const truncateText = (
     text: string | null | undefined,
     maxLength = 80,
@@ -116,10 +126,21 @@ const truncateText = (
         ? text.substring(0, maxLength) + '...'
         : text;
 };
+
+// Date formatter
+const formatDate = (dateString?: string): string => {
+    if (!dateString) return '-';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('id-ID', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+    });
+};
 </script>
 
 <template>
-    <Head title="Manajemen Kategori" />
+    <Head title="Manajemen Materi Pembelajaran" />
 
     <AuthenticatedLayout>
         <div class="space-y-6">
@@ -145,35 +166,63 @@ const truncateText = (
             >
                 <div>
                     <h1 class="text-2xl font-bold tracking-tight text-white">
-                        Manajemen Kategori
+                        Manajemen Materi Pembelajaran
                     </h1>
                     <p class="mt-1 text-sm text-slate-400">
-                        Kelola data master kategori kimia untuk pengelompokan
-                        materi pembelajaran dan bank soal pada sistem MVAR.
+                        Kelola data materi pembelajaran kimia, modul bacaan, dan
+                        media penunjang berbasis 3D AR.
                     </p>
                 </div>
 
-                <div v-if="can('categories.create')" class="flex items-center">
-                    <button
-                        @click="openCreateModal"
+                <div v-if="can('materials.create')" class="flex items-center">
+                    <Link
+                        :href="route('materials.create')"
                         class="inline-flex items-center justify-center gap-2 rounded-xl bg-[#e5a824] px-4 py-2.5 text-sm font-semibold text-black shadow-lg shadow-[#e5a824]/20 transition-all hover:bg-[#d49718] focus:ring-2 focus:ring-[#e5a824] focus:ring-offset-2 focus:ring-offset-[#06101c] focus:outline-none"
                     >
                         <Plus class="h-4 w-4" />
-                        <span>Tambah Kategori</span>
-                    </button>
+                        <span>Tambah Materi</span>
+                    </Link>
                 </div>
             </div>
 
-            <!-- Toolbar: Search & Refresh -->
+            <!-- Toolbar: Search, Category Filter & Refresh -->
             <div
-                class="flex flex-col items-center justify-between gap-3 sm:flex-row"
+                class="flex flex-col items-stretch justify-between gap-3 sm:flex-row sm:items-center"
             >
-                <div class="w-full sm:max-w-md">
-                    <SearchBar
-                        v-model="searchQuery"
-                        placeholder="Cari nama atau deskripsi kategori..."
-                        @search="handleSearch"
-                    />
+                <div
+                    class="flex flex-1 flex-col gap-3 sm:flex-row sm:items-center"
+                >
+                    <!-- Search Input -->
+                    <div class="w-full sm:max-w-xs">
+                        <SearchBar
+                            v-model="searchQuery"
+                            placeholder="Cari judul materi..."
+                            @search="handleSearch"
+                        />
+                    </div>
+
+                    <!-- Category Filter Dropdown -->
+                    <div class="relative w-full sm:w-60">
+                        <div
+                            class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400"
+                        >
+                            <Filter class="h-4 w-4" />
+                        </div>
+                        <select
+                            v-model="selectedCategory"
+                            @change="handleCategoryChange"
+                            class="w-full rounded-xl border border-[#1b344d] bg-[#0c1a28] py-2.5 pr-8 pl-9 text-sm text-white focus:border-[#e5a824] focus:ring-1 focus:ring-[#e5a824] focus:outline-none"
+                        >
+                            <option value="">Semua Kategori</option>
+                            <option
+                                v-for="cat in categories"
+                                :key="cat.id_category"
+                                :value="cat.id_category"
+                            >
+                                {{ cat.name }}
+                            </option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="flex items-center gap-2 self-end sm:self-auto">
@@ -190,88 +239,84 @@ const truncateText = (
             >
                 <DataTable
                     :headers="tableHeaders"
-                    :empty="categories.data.length === 0"
-                    empty-message="Tidak ada kategori ditemukan."
+                    :empty="materials.data.length === 0"
+                    empty-message="Tidak ada materi pembelajaran ditemukan."
                 >
                     <tr
-                        v-for="cat in categories.data"
-                        :key="cat.id_category"
+                        v-for="mat in materials.data"
+                        :key="mat.id_material"
                         class="transition hover:bg-[#0c1c2e]"
                     >
-                        <!-- NAMA KATEGORI -->
+                        <!-- NAMA MATERI -->
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-3">
                                 <div>
                                     <span class="font-semibold text-white">
-                                        {{ cat.name }}
+                                        {{ mat.name }}
                                     </span>
                                     <span
                                         class="ml-2 rounded bg-[#06121f] px-1.5 py-0.5 font-mono text-[10px] text-slate-500"
                                     >
-                                        #{{ cat.id_category }}
+                                        #{{ mat.id_material }}
                                     </span>
                                 </div>
                             </div>
                         </td>
 
-                        <!-- DESKRIPSI -->
-                        <td class="max-w-sm px-6 py-4">
-                            <p
-                                class="text-sm break-all text-slate-300"
-                                :title="cat.description || undefined"
-                            >
-                                {{ truncateText(cat.description, 80) }}
-                            </p>
-                        </td>
-
-                        <!-- TOTAL MATERI -->
+                        <!-- KATEGORI -->
                         <td class="px-6 py-4">
                             <div
-                                class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium"
+                                class="text-sm font-medium break-all text-slate-300"
                             >
-                                <span
-                                    >{{ cat.materials_count || 0 }}
-                                    <span class="ml-1">Materi</span></span
-                                >
+                                {{ mat.category?.name || 'Tanpa Kategori' }}
                             </div>
                         </td>
 
-                        <!-- TOTAL SOAL -->
+                        <!-- DESKRIPSI (Truncated with Ellipsis and break-all) -->
+                        <td class="max-w-sm px-6 py-4">
+                            <p
+                                class="text-sm break-all text-slate-300"
+                                :title="mat.description || undefined"
+                            >
+                                {{ truncateText(mat.description, 80) }}
+                            </p>
+                        </td>
+
+                        <!-- TANGGAL DIBUAT -->
                         <td class="px-6 py-4">
                             <div
-                                class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium"
+                                class="inline-flex items-center gap-1.5 text-xs text-slate-400"
                             >
-                                <span
-                                    >{{ cat.questions_count || 0 }}
-                                    <span class="ml-1">Soal</span></span
-                                >
+                                <Calendar class="h-3.5 w-3.5 text-slate-500" />
+                                <span>{{ formatDate(mat.created_at) }}</span>
                             </div>
                         </td>
 
                         <!-- AKSI (Icon only) -->
                         <td
                             v-if="
-                                can('categories.edit') ||
-                                can('categories.delete')
+                                can('materials.edit') || can('materials.delete')
                             "
                             class="px-6 py-4"
                         >
                             <div class="flex items-center justify-center gap-2">
-                                <button
-                                    v-if="can('categories.edit')"
-                                    @click="openEditModal(cat)"
+                                <Link
+                                    v-if="can('materials.edit')"
+                                    :href="
+                                        route('materials.edit', mat.id_material)
+                                    "
                                     class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[#1b344d] bg-[#0c1a28] text-slate-300 transition hover:border-[#e5a824]/50 hover:bg-[#14263b] hover:text-[#e5a824] focus:outline-none"
-                                    title="Edit Kategori"
-                                    aria-label="Edit Kategori"
+                                    title="Edit Materi"
+                                    aria-label="Edit Materi"
                                 >
                                     <Pencil class="h-4 w-4" />
-                                </button>
+                                </Link>
                                 <button
-                                    v-if="can('categories.delete')"
-                                    @click="openDeleteModal(cat)"
+                                    v-if="can('materials.delete')"
+                                    @click="openDeleteModal(mat)"
                                     class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[#1b344d] bg-[#0c1a28] text-slate-300 transition hover:border-rose-500/50 hover:bg-rose-500/10 hover:text-rose-400 focus:outline-none"
-                                    title="Hapus Kategori"
-                                    aria-label="Hapus Kategori"
+                                    title="Hapus Materi"
+                                    aria-label="Hapus Materi"
                                 >
                                     <Trash2 class="h-4 w-4" />
                                 </button>
@@ -282,26 +327,19 @@ const truncateText = (
 
                 <!-- Pagination Component -->
                 <Pagination
-                    :links="categories.links"
-                    :from="categories.from"
-                    :to="categories.to"
-                    :total="categories.total"
-                    item-name="kategori"
+                    :links="materials.links"
+                    :from="materials.from"
+                    :to="materials.to"
+                    :total="materials.total"
+                    item-name="materi"
                 />
             </div>
         </div>
 
-        <!-- Create / Edit Category Modal -->
-        <CategoryFormModal
-            :show="formModalOpen"
-            :category="selectedCategory"
-            @close="formModalOpen = false"
-        />
-
-        <!-- Delete Confirmation Modal -->
-        <DeleteCategoryModal
+        <!-- Delete Modal Component -->
+        <DeleteMaterialModal
             :show="deleteModalOpen"
-            :category="selectedCategory"
+            :material="materialToDelete"
             @close="deleteModalOpen = false"
         />
     </AuthenticatedLayout>

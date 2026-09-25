@@ -75,8 +75,8 @@ const navigation = computed(() => {
         },
         {
             name: 'Modul Materi',
-            href: '#',
-            active: false,
+            href: route('materials.index'),
+            active: route().current('materials.*'),
             icon: BookOpen,
             show: can('materials.view'),
         },

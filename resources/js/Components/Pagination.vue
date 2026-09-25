@@ -34,7 +34,7 @@ const cleanLabel = (label: string) => {
 
 <template>
     <div
-        v-if="links && links.length > 3"
+        v-if="(total !== undefined && total > 0) || (links && links.length > 0)"
         class="flex flex-col items-center justify-between gap-4 border-t border-[#14263b] px-6 py-4 sm:flex-row"
     >
         <!-- Summary Info -->
@@ -48,8 +48,8 @@ const cleanLabel = (label: string) => {
             {{ itemName }}
         </p>
 
-        <!-- Page Link Buttons -->
-        <div class="flex items-center gap-1.5">
+        <!-- Page Link Buttons (only shown when multiple pages exist) -->
+        <div v-if="links && links.length > 3" class="flex items-center gap-1.5">
             <template v-for="(link, idx) in links" :key="idx">
                 <span
                     v-if="!link.url"

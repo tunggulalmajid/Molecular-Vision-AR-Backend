@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
@@ -47,6 +48,15 @@ Route::middleware('auth')->group(function () {
     Route::post('categories', [CategoryController::class, 'store'])->middleware('permission:categories.create')->name('categories.store');
     Route::put('categories/{category}', [CategoryController::class, 'update'])->middleware('permission:categories.edit')->name('categories.update');
     Route::delete('categories/{category}', [CategoryController::class, 'destroy'])->middleware('permission:categories.delete')->name('categories.destroy');
+
+    // Modul Materi Pembelajaran
+    Route::get('materials', [MaterialController::class, 'index'])->middleware('permission:materials.view')->name('materials.index');
+    Route::get('materials/create', [MaterialController::class, 'create'])->middleware('permission:materials.create')->name('materials.create');
+    Route::post('materials', [MaterialController::class, 'store'])->middleware('permission:materials.create')->name('materials.store');
+    Route::get('materials/{material}/edit', [MaterialController::class, 'edit'])->middleware('permission:materials.edit')->name('materials.edit');
+    Route::put('materials/{material}', [MaterialController::class, 'update'])->middleware('permission:materials.edit')->name('materials.update');
+    Route::delete('materials/{material}', [MaterialController::class, 'destroy'])->middleware('permission:materials.delete')->name('materials.destroy');
+    Route::post('materials/upload-image', [MaterialController::class, 'uploadImage'])->middleware('permission:materials.create|materials.edit')->name('materials.upload-image');
 
     // Modul RBAC & Hak Akses
     Route::get('roles', [RoleController::class, 'index'])->middleware('permission:roles.view')->name('roles.index');
