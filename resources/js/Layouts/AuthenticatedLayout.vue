@@ -15,7 +15,10 @@ import {
     X,
 } from 'lucide-vue-next';
 
+import { usePermission } from '@/composables/usePermission';
+
 const page = usePage();
+const { can } = usePermission();
 const mobileMenuOpen = ref(false);
 const userMenuOpen = ref(false);
 const userMenuRef = ref<HTMLElement | null>(null);
@@ -39,44 +42,54 @@ const userInitials = computed(() => {
     return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
 });
 
-const navigation = [
-    {
-        name: 'Dashboard',
-        href: route('dashboard'),
-        active: route().current('dashboard'),
-        icon: LayoutDashboard,
-    },
-    {
-        name: 'Modul User',
-        href: '#',
-        active: false,
-        icon: Users,
-    },
-    {
-        name: 'Modul Molekul',
-        href: '#',
-        active: false,
-        icon: Atom,
-    },
-    {
-        name: 'Modul Materi',
-        href: '#',
-        active: false,
-        icon: BookOpen,
-    },
-    {
-        name: 'Modul RBAC & Akses',
-        href: '#',
-        active: false,
-        icon: ShieldCheck,
-    },
-    {
-        name: 'Modul Bank Soal & Kuis',
-        href: '#',
-        active: false,
-        icon: FileQuestion,
-    },
-];
+const navigation = computed(() => {
+    const items = [
+        {
+            name: 'Dashboard',
+            href: route('dashboard'),
+            active: route().current('dashboard'),
+            icon: LayoutDashboard,
+            show: true,
+        },
+        {
+            name: 'Modul User',
+            href: route('users.index'),
+            active: route().current('users.*'),
+            icon: Users,
+            show: can('users.view'),
+        },
+        {
+            name: 'Modul Molekul',
+            href: '#',
+            active: false,
+            icon: Atom,
+            show: can('molecules.view'),
+        },
+        {
+            name: 'Modul Materi',
+            href: '#',
+            active: false,
+            icon: BookOpen,
+            show: can('materials.view'),
+        },
+        {
+            name: 'Modul RBAC & Akses',
+            href: route('roles.index'),
+            active: route().current('roles.*'),
+            icon: ShieldCheck,
+            show: can('roles.view'),
+        },
+        {
+            name: 'Modul Bank Soal & Kuis',
+            href: '#',
+            active: false,
+            icon: FileQuestion,
+            show: can('questions.view'),
+        },
+    ];
+
+    return items.filter((item) => item.show);
+});
 
 const toggleUserMenu = () => {
     userMenuOpen.value = !userMenuOpen.value;
@@ -99,7 +112,7 @@ onUnmounted(() => {
 
 <template>
     <div
-        class="flex min-h-screen bg-[#06101c] font-sans text-slate-100 antialiased selection:bg-[#e5a824] selection:text-black"
+        class="min-h-screen bg-[#06101c] font-sans text-slate-100 antialiased selection:bg-[#e5a824] selection:text-black"
     >
         <!-- Mobile Sidebar Overlay Backdrop -->
         <div
@@ -108,16 +121,16 @@ onUnmounted(() => {
             class="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm transition-opacity lg:hidden"
         />
 
-        <!-- Sidebar Navigation -->
+        <!-- Fixed Sidebar Navigation -->
         <aside
             :class="[
-                'fixed inset-y-0 left-0 z-50 flex w-72 flex-col border-r border-[#14263b] bg-[#091624] transition-transform duration-300 ease-in-out lg:static lg:translate-x-0',
-                mobileMenuOpen ? 'translate-x-0' : '-translate-x-full',
+                'fixed inset-y-0 left-0 z-50 flex h-screen w-72 flex-col border-r border-[#14263b] bg-[#091624] transition-transform duration-300 ease-in-out',
+                mobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
             ]"
         >
             <!-- Top Branding Header -->
             <div
-                class="flex h-16 items-center justify-between border-b border-[#14263b] px-6 py-12"
+                class="flex h-16 shrink-0 items-center justify-between border-b border-[#14263b] px-6"
             >
                 <Link
                     :href="route('dashboard')"
@@ -178,7 +191,7 @@ onUnmounted(() => {
 
             <!-- Bottom Profile Section with 3-dots Menu -->
             <div
-                class="relative mt-auto border-t border-[#14263b] p-4"
+                class="relative mt-auto shrink-0 border-t border-[#14263b] bg-[#091624] p-4"
                 ref="userMenuRef"
             >
                 <div class="flex items-center justify-between">
@@ -249,7 +262,7 @@ onUnmounted(() => {
         </aside>
 
         <!-- Main Content Area -->
-        <div class="flex min-w-0 flex-1 flex-col bg-[#06101c]">
+        <div class="flex min-h-screen min-w-0 flex-1 flex-col bg-[#06101c] lg:pl-72">
             <!-- Top Mobile Bar -->
             <header
                 class="flex h-16 items-center justify-between border-b border-[#14263b] bg-[#091624] px-4 lg:hidden"
@@ -280,7 +293,7 @@ onUnmounted(() => {
             </header>
 
             <!-- Page Main Body -->
-            <main class="flex-1 overflow-y-auto p-6 sm:p-8 lg:p-10 xl:p-12">
+            <main class="flex-1 p-6 sm:p-8 lg:p-10 xl:p-12">
                 <slot />
             </main>
         </div>
