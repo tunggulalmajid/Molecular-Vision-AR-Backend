@@ -68,8 +68,8 @@ const navigation = computed(() => {
         },
         {
             name: 'Modul Molekul',
-            href: '#',
-            active: false,
+            href: route('molecules.index'),
+            active: route().current('molecules.*'),
             icon: Atom,
             show: can('molecules.view'),
         },

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\MaterialController;
+use App\Http\Controllers\MoleculeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
@@ -48,6 +49,14 @@ Route::middleware('auth')->group(function () {
     Route::post('categories', [CategoryController::class, 'store'])->middleware('permission:categories.create')->name('categories.store');
     Route::put('categories/{category}', [CategoryController::class, 'update'])->middleware('permission:categories.edit')->name('categories.update');
     Route::delete('categories/{category}', [CategoryController::class, 'destroy'])->middleware('permission:categories.delete')->name('categories.destroy');
+
+    // Modul Molekul Kimia
+    Route::get('molecules', [MoleculeController::class, 'index'])->middleware('permission:molecules.view')->name('molecules.index');
+    Route::get('molecules/create', [MoleculeController::class, 'create'])->middleware('permission:molecules.create')->name('molecules.create');
+    Route::post('molecules', [MoleculeController::class, 'store'])->middleware('permission:molecules.create')->name('molecules.store');
+    Route::get('molecules/{molecule}/edit', [MoleculeController::class, 'edit'])->middleware('permission:molecules.edit')->name('molecules.edit');
+    Route::put('molecules/{molecule}', [MoleculeController::class, 'update'])->middleware('permission:molecules.edit')->name('molecules.update');
+    Route::delete('molecules/{molecule}', [MoleculeController::class, 'destroy'])->middleware('permission:molecules.delete')->name('molecules.destroy');
 
     // Modul Materi Pembelajaran
     Route::get('materials', [MaterialController::class, 'index'])->middleware('permission:materials.view')->name('materials.index');
