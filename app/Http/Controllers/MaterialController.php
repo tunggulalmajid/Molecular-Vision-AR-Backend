@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Material;
+use App\Services\FileStorageService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -137,7 +138,7 @@ class MaterialController extends Controller
     /**
      * Handle image upload from rich text editor.
      */
-    public function uploadImage(Request $request): JsonResponse
+    public function uploadImage(Request $request, FileStorageService $storageService): JsonResponse
     {
         $request->validate([
             'image' => ['required', 'image', 'mimes:jpeg,png,jpg,webp,gif', 'max:5120'],
@@ -145,10 +146,10 @@ class MaterialController extends Controller
 
         /** @var UploadedFile $file */
         $file = $request->file('image');
-        $path = $file->store('materials/images', 'public');
+        $uploaded = $storageService->uploadImage($file, 'materials/images');
 
         return response()->json([
-            'url' => asset('storage/'.$path),
+            'url' => $uploaded['url'],
         ]);
     }
 }
