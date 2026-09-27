@@ -1,38 +1,20 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\MoleculeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
-use App\Models\Material;
-use App\Models\Molecule;
-use App\Models\Question;
-use App\Models\User;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 Route::get('/', function () {
     return redirect()->route('login');
 });
 
-Route::get('/dashboard', function () {
-    $userCount = User::count();
-    $moleculeCount = Molecule::count();
-    $materialCount = Material::count();
-    $questionCount = Question::count();
-
-    return Inertia::render('Dashboard', [
-        'stats' => [
-            'total_user' => $userCount > 10 ? $userCount : 1386,
-            'total_molekul' => $moleculeCount > 10 ? $moleculeCount : 348,
-            'total_materi' => $materialCount > 10 ? $materialCount : 86,
-            'total_soal' => $questionCount > 10 ? $questionCount : 14290,
-        ],
-    ]);
-})->middleware(['auth'])->name('dashboard');
+Route::get('/dashboard', DashboardController::class)->middleware(['auth'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

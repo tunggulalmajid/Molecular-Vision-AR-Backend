@@ -43,22 +43,15 @@ const userInitials = computed(() => {
     return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
 });
 
-const navigation = computed(() => {
+const dashboardItem = computed(() => ({
+    name: 'Dashboard',
+    href: route('dashboard'),
+    active: route().current('dashboard'),
+    icon: LayoutDashboard,
+}));
+
+const learningNavigation = computed(() => {
     const items = [
-        {
-            name: 'Dashboard',
-            href: route('dashboard'),
-            active: route().current('dashboard'),
-            icon: LayoutDashboard,
-            show: true,
-        },
-        {
-            name: 'Modul User',
-            href: route('users.index'),
-            active: route().current('users.*'),
-            icon: Users,
-            show: can('users.view'),
-        },
         {
             name: 'Modul Kategori',
             href: route('categories.index'),
@@ -81,18 +74,32 @@ const navigation = computed(() => {
             show: can('materials.view'),
         },
         {
-            name: 'Modul RBAC & Akses',
-            href: route('roles.index'),
-            active: route().current('roles.*'),
-            icon: ShieldCheck,
-            show: can('roles.view'),
-        },
-        {
             name: 'Modul Bank Soal & Kuis',
             href: route('questions.index'),
             active: route().current('questions.*'),
             icon: FileQuestion,
             show: can('questions.view'),
+        },
+    ];
+
+    return items.filter((item) => item.show);
+});
+
+const systemNavigation = computed(() => {
+    const items = [
+        {
+            name: 'Modul User',
+            href: route('users.index'),
+            active: route().current('users.*'),
+            icon: Users,
+            show: can('users.view'),
+        },
+        {
+            name: 'Modul RBAC & Akses',
+            href: route('roles.index'),
+            active: route().current('roles.*'),
+            icon: ShieldCheck,
+            show: can('roles.view'),
         },
     ];
 
@@ -174,39 +181,102 @@ onUnmounted(() => {
             </div>
 
             <!-- Main Navigation Links -->
-            <div class="flex-1 overflow-y-auto px-4 py-6">
-                <div class="mb-3 px-3">
-                    <span
-                        class="text-[11px] font-bold tracking-wider text-slate-400 uppercase"
-                    >
-                        MENU UTAMA
-                    </span>
-                </div>
-
-                <nav class="space-y-1.5">
+            <div class="flex-1 space-y-6 overflow-y-auto px-4 py-6">
+                <!-- 1. Standalone Dashboard (Tanpa kategori) -->
+                <div>
                     <Link
-                        v-for="item in navigation"
-                        :key="item.name"
-                        :href="item.href"
+                        :href="dashboardItem.href"
                         :class="[
                             'group flex items-center gap-3 rounded-lg px-3.5 py-2.5 text-sm font-medium transition-all duration-150',
-                            item.active
+                            dashboardItem.active
                                 ? 'bg-[#16273b] text-[#e5a824] shadow-sm'
                                 : 'text-slate-300 hover:bg-[#112338] hover:text-white',
                         ]"
                     >
                         <component
-                            :is="item.icon"
+                            :is="dashboardItem.icon"
                             class="h-5 w-5 shrink-0"
                             :class="
-                                item.active
+                                dashboardItem.active
                                     ? 'text-[#e5a824]'
                                     : 'text-slate-400 group-hover:text-slate-200'
                             "
                         />
-                        <span>{{ item.name }}</span>
+                        <span>{{ dashboardItem.name }}</span>
                     </Link>
-                </nav>
+                </div>
+
+                <!-- 2. Kategori: PEMBELAJARAN -->
+                <div v-if="learningNavigation.length > 0">
+                    <div class="mb-2 px-3">
+                        <span
+                            class="text-[11px] font-bold tracking-wider text-slate-400 uppercase"
+                        >
+                            PEMBELAJARAN
+                        </span>
+                    </div>
+
+                    <nav class="space-y-1.5">
+                        <Link
+                            v-for="item in learningNavigation"
+                            :key="item.name"
+                            :href="item.href"
+                            :class="[
+                                'group flex items-center gap-3 rounded-lg px-3.5 py-2.5 text-sm font-medium transition-all duration-150',
+                                item.active
+                                    ? 'bg-[#16273b] text-[#e5a824] shadow-sm'
+                                    : 'text-slate-300 hover:bg-[#112338] hover:text-white',
+                            ]"
+                        >
+                            <component
+                                :is="item.icon"
+                                class="h-5 w-5 shrink-0"
+                                :class="
+                                    item.active
+                                        ? 'text-[#e5a824]'
+                                        : 'text-slate-400 group-hover:text-slate-200'
+                                "
+                            />
+                            <span>{{ item.name }}</span>
+                        </Link>
+                    </nav>
+                </div>
+
+                <!-- 3. Kategori: SYSTEM -->
+                <div v-if="systemNavigation.length > 0">
+                    <div class="mb-2 px-3">
+                        <span
+                            class="text-[11px] font-bold tracking-wider text-slate-400 uppercase"
+                        >
+                            SYSTEM
+                        </span>
+                    </div>
+
+                    <nav class="space-y-1.5">
+                        <Link
+                            v-for="item in systemNavigation"
+                            :key="item.name"
+                            :href="item.href"
+                            :class="[
+                                'group flex items-center gap-3 rounded-lg px-3.5 py-2.5 text-sm font-medium transition-all duration-150',
+                                item.active
+                                    ? 'bg-[#16273b] text-[#e5a824] shadow-sm'
+                                    : 'text-slate-300 hover:bg-[#112338] hover:text-white',
+                            ]"
+                        >
+                            <component
+                                :is="item.icon"
+                                class="h-5 w-5 shrink-0"
+                                :class="
+                                    item.active
+                                        ? 'text-[#e5a824]'
+                                        : 'text-slate-400 group-hover:text-slate-200'
+                                "
+                            />
+                            <span>{{ item.name }}</span>
+                        </Link>
+                    </nav>
+                </div>
             </div>
 
             <!-- Bottom Profile Section with 3-dots Menu -->
