@@ -89,8 +89,8 @@ const navigation = computed(() => {
         },
         {
             name: 'Modul Bank Soal & Kuis',
-            href: '#',
-            active: false,
+            href: route('questions.index'),
+            active: route().current('questions.*'),
             icon: FileQuestion,
             show: can('questions.view'),
         },

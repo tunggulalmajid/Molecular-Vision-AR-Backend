@@ -4,6 +4,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\MoleculeController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Models\Material;
@@ -66,6 +67,14 @@ Route::middleware('auth')->group(function () {
     Route::put('materials/{material}', [MaterialController::class, 'update'])->middleware('permission:materials.edit')->name('materials.update');
     Route::delete('materials/{material}', [MaterialController::class, 'destroy'])->middleware('permission:materials.delete')->name('materials.destroy');
     Route::post('materials/upload-image', [MaterialController::class, 'uploadImage'])->middleware('permission:materials.create|materials.edit')->name('materials.upload-image');
+
+    // Modul Bank Soal & Kuis
+    Route::get('questions', [QuestionController::class, 'index'])->middleware('permission:questions.view')->name('questions.index');
+    Route::get('questions/create', [QuestionController::class, 'create'])->middleware('permission:questions.create')->name('questions.create');
+    Route::post('questions', [QuestionController::class, 'store'])->middleware('permission:questions.create')->name('questions.store');
+    Route::get('questions/{question}/edit', [QuestionController::class, 'edit'])->middleware('permission:questions.edit')->name('questions.edit');
+    Route::put('questions/{question}', [QuestionController::class, 'update'])->middleware('permission:questions.edit')->name('questions.update');
+    Route::delete('questions/{question}', [QuestionController::class, 'destroy'])->middleware('permission:questions.delete')->name('questions.destroy');
 
     // Modul RBAC & Hak Akses
     Route::get('roles', [RoleController::class, 'index'])->middleware('permission:roles.view')->name('roles.index');
