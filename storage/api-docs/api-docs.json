@@ -764,6 +764,615 @@
                 "security": []
             }
         },
+        "/exercises": {
+            "get": {
+                "tags": [
+                    "Latihan & Soal (Exercise)"
+                ],
+                "summary": "Katalog Kategori Latihan Soal",
+                "description": "Mengambil seluruh kategori soal latihan beserta jumlah butir soal yang tersedia pada masing-masing kategori.",
+                "operationId": "600c5637bf3a0ab6ecc915f8bf92cc2d",
+                "responses": {
+                    "200": {
+                        "description": "Daftar kategori latihan soal berhasil diambil.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Daftar kategori latihan soal berhasil diambil."
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id_category": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "Geometri Molekul"
+                                                    },
+                                                    "description": {
+                                                        "type": "string",
+                                                        "example": "Latihan pemahaman bentuk geometri molekul berdasarkan teori domain elektron."
+                                                    },
+                                                    "questions_count": {
+                                                        "type": "integer",
+                                                        "example": 5
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/exercises/{id_category}": {
+            "get": {
+                "tags": [
+                    "Latihan & Soal (Exercise)"
+                ],
+                "summary": "Ambil Butir Soal Kuis (Anti-Cheat)",
+                "description": "Mengambil daftar butir soal latihan untuk kategori tertentu. Seluruh kunci jawaban (is_correct) disembunyikan agar tidak terjadi kebocoran kunci jawaban ke client mobile.",
+                "operationId": "a16560be2c988c58f227f9de0dad7e03",
+                "parameters": [
+                    {
+                        "name": "id_category",
+                        "in": "path",
+                        "description": "ID kategori kuis",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Daftar butir soal kuis berhasil diambil.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Daftar butir soal kuis berhasil diambil."
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "category": {
+                                                    "properties": {
+                                                        "id_category": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "name": {
+                                                            "type": "string",
+                                                            "example": "Geometri Molekul"
+                                                        },
+                                                        "description": {
+                                                            "type": "string",
+                                                            "example": "Latihan pemahaman bentuk geometri molekul."
+                                                        },
+                                                        "total_questions": {
+                                                            "type": "integer",
+                                                            "example": 5
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "questions": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id_question": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "Berapakah sudut ikatan pada molekul air (H2O)?"
+                                                            },
+                                                            "question_type": {
+                                                                "type": "string",
+                                                                "example": "multiple_choice"
+                                                            },
+                                                            "options": {
+                                                                "type": "array",
+                                                                "items": {
+                                                                    "properties": {
+                                                                        "id_option": {
+                                                                            "type": "integer",
+                                                                            "example": 10
+                                                                        },
+                                                                        "option_text": {
+                                                                            "type": "string",
+                                                                            "example": "104.5°"
+                                                                        }
+                                                                    },
+                                                                    "type": "object"
+                                                                }
+                                                            },
+                                                            "matching_targets": {
+                                                                "description": "Daftar target jodoh acak khusus untuk tipe matching",
+                                                                "type": "array",
+                                                                "items": {
+                                                                    "type": "string"
+                                                                },
+                                                                "nullable": true
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Kategori kuis tidak ditemukan.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Kategori kuis tidak ditemukan."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Latihan & Soal (Exercise)"
+                ],
+                "summary": "Submit Jawaban Kuis & Auto-Grading",
+                "description": "Mengirimkan seluruh jawaban siswa untuk kategori tersebut. Server melakukan evaluasi otomatis (grading) untuk ke-5 tipe soal, menyimpan hasil latihan, dan otomatis memperbarui progres kategori (UserCategoryProgress).",
+                "operationId": "3ddee6f8155c6f0738847af30f6c5a4c",
+                "parameters": [
+                    {
+                        "name": "id_category",
+                        "in": "path",
+                        "description": "ID kategori kuis",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "answers"
+                                ],
+                                "properties": {
+                                    "answers": {
+                                        "type": "array",
+                                        "items": {
+                                            "required": [
+                                                "id_question",
+                                                "answer"
+                                            ],
+                                            "properties": {
+                                                "id_question": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "answer": {
+                                                    "description": "Jawaban user (ID opsi, teks isian, atau array pasangan/pilihan)",
+                                                    "example": "10"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Latihan soal berhasil dikoreksi dan disimpan.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Latihan soal berhasil dikoreksi dan disimpan."
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id_category": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "summary": {
+                                                    "properties": {
+                                                        "total_questions": {
+                                                            "type": "integer",
+                                                            "example": 5
+                                                        },
+                                                        "answered": {
+                                                            "type": "integer",
+                                                            "example": 5
+                                                        },
+                                                        "correct": {
+                                                            "type": "integer",
+                                                            "example": 4
+                                                        },
+                                                        "wrong": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "score": {
+                                                            "type": "number",
+                                                            "format": "float",
+                                                            "example": 80
+                                                        },
+                                                        "is_completed": {
+                                                            "type": "boolean",
+                                                            "example": true
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "results": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id_question": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "is_correct": {
+                                                                "type": "boolean",
+                                                                "example": true
+                                                            },
+                                                            "user_answer": {
+                                                                "type": "string",
+                                                                "example": "104.5°"
+                                                            },
+                                                            "correct_answer": {
+                                                                "type": "string",
+                                                                "example": "104.5°"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validasi gagal.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The answers field is required."
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Kategori kuis tidak ditemukan.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Kategori kuis tidak ditemukan."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/exercises/{id_category}/result": {
+            "get": {
+                "tags": [
+                    "Latihan & Soal (Exercise)"
+                ],
+                "summary": "Rapor Hasil Latihan Kategori",
+                "description": "Mengambil riwayat/rapor pengerjaan kuis siswa khusus untuk kategori tersebut, mencakup skor nilai, jumlah benar/salah, tanggal pengerjaan, dan review butir soal.",
+                "operationId": "8c037cb55b771e51723e4c4e99e26441",
+                "parameters": [
+                    {
+                        "name": "id_category",
+                        "in": "path",
+                        "description": "ID kategori kuis",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Rapor hasil latihan kategori berhasil diambil.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Rapor hasil latihan kategori berhasil diambil."
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "category": {
+                                                    "properties": {
+                                                        "id_category": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "name": {
+                                                            "type": "string",
+                                                            "example": "Geometri Molekul"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "summary": {
+                                                    "properties": {
+                                                        "total_questions": {
+                                                            "type": "integer",
+                                                            "example": 5
+                                                        },
+                                                        "answered": {
+                                                            "type": "integer",
+                                                            "example": 5
+                                                        },
+                                                        "correct": {
+                                                            "type": "integer",
+                                                            "example": 4
+                                                        },
+                                                        "wrong": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "score": {
+                                                            "type": "number",
+                                                            "format": "float",
+                                                            "example": 80,
+                                                            "nullable": true
+                                                        },
+                                                        "is_completed": {
+                                                            "type": "boolean",
+                                                            "example": true
+                                                        },
+                                                        "last_attempt_at": {
+                                                            "type": "string",
+                                                            "format": "date-time",
+                                                            "example": "2026-09-28T22:30:00.000000Z",
+                                                            "nullable": true
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "review": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id_question": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "question_name": {
+                                                                "type": "string",
+                                                                "example": "Berapakah sudut ikatan pada molekul air (H2O)?"
+                                                            },
+                                                            "question_type": {
+                                                                "type": "string",
+                                                                "example": "multiple_choice"
+                                                            },
+                                                            "is_answered": {
+                                                                "type": "boolean",
+                                                                "example": true
+                                                            },
+                                                            "is_correct": {
+                                                                "type": "boolean",
+                                                                "example": true
+                                                            },
+                                                            "user_answer": {
+                                                                "type": "string",
+                                                                "example": "104.5°",
+                                                                "nullable": true
+                                                            },
+                                                            "correct_answer": {
+                                                                "type": "string",
+                                                                "example": "104.5°"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Kategori kuis tidak ditemukan.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Kategori kuis tidak ditemukan."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
         "/materials": {
             "get": {
                 "tags": [
@@ -1522,6 +2131,544 @@
                     }
                 ]
             }
+        },
+        "/progress": {
+            "get": {
+                "tags": [
+                    "Progres Belajar"
+                ],
+                "summary": "Ringkasan & Detail Progres Belajar",
+                "description": "Mengambil ringkasan progres belajar yang seragam untuk materi, molekul 3D, dan kuis (jumlah total, telah selesai, belum selesai, dan persentase) serta daftar ID tuntas untuk lookup cepat O(1) di aplikasi mobile.",
+                "operationId": "3f2443914007bd21a8a7878e12e26348",
+                "responses": {
+                    "200": {
+                        "description": "Data progres belajar berhasil diambil.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Data progres belajar berhasil diambil."
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "materials": {
+                                                    "properties": {
+                                                        "total": {
+                                                            "type": "integer",
+                                                            "example": 12
+                                                        },
+                                                        "completed": {
+                                                            "type": "integer",
+                                                            "example": 8
+                                                        },
+                                                        "uncompleted": {
+                                                            "type": "integer",
+                                                            "example": 4
+                                                        },
+                                                        "percentage": {
+                                                            "type": "number",
+                                                            "format": "float",
+                                                            "example": 66.7
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "molecules": {
+                                                    "properties": {
+                                                        "total": {
+                                                            "type": "integer",
+                                                            "example": 10
+                                                        },
+                                                        "completed": {
+                                                            "type": "integer",
+                                                            "example": 5
+                                                        },
+                                                        "uncompleted": {
+                                                            "type": "integer",
+                                                            "example": 5
+                                                        },
+                                                        "percentage": {
+                                                            "type": "number",
+                                                            "format": "float",
+                                                            "example": 50
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "quiz": {
+                                                    "properties": {
+                                                        "total": {
+                                                            "type": "integer",
+                                                            "example": 4
+                                                        },
+                                                        "completed": {
+                                                            "type": "integer",
+                                                            "example": 2
+                                                        },
+                                                        "uncompleted": {
+                                                            "type": "integer",
+                                                            "example": 2
+                                                        },
+                                                        "percentage": {
+                                                            "type": "number",
+                                                            "format": "float",
+                                                            "example": 50
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "overall": {
+                                                    "properties": {
+                                                        "total": {
+                                                            "type": "integer",
+                                                            "example": 26
+                                                        },
+                                                        "completed": {
+                                                            "type": "integer",
+                                                            "example": 15
+                                                        },
+                                                        "uncompleted": {
+                                                            "type": "integer",
+                                                            "example": 11
+                                                        },
+                                                        "percentage": {
+                                                            "type": "number",
+                                                            "format": "float",
+                                                            "example": 57.7
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "completed_ids": {
+                                                    "properties": {
+                                                        "materials": {
+                                                            "type": "array",
+                                                            "items": {
+                                                                "type": "integer"
+                                                            },
+                                                            "example": [
+                                                                1,
+                                                                2,
+                                                                4,
+                                                                5,
+                                                                7,
+                                                                8,
+                                                                9,
+                                                                10
+                                                            ]
+                                                        },
+                                                        "molecules": {
+                                                            "type": "array",
+                                                            "items": {
+                                                                "type": "integer"
+                                                            },
+                                                            "example": [
+                                                                1,
+                                                                3,
+                                                                5,
+                                                                6,
+                                                                8
+                                                            ]
+                                                        },
+                                                        "quiz": {
+                                                            "type": "array",
+                                                            "items": {
+                                                                "type": "integer"
+                                                            },
+                                                            "example": [
+                                                                1,
+                                                                2
+                                                            ]
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated - Token tidak valid atau tidak disertakan.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/progress/material": {
+            "post": {
+                "tags": [
+                    "Progres Belajar"
+                ],
+                "summary": "Tandai Progres Materi Selesai",
+                "description": "Mencatat bahwa suatu materi pembelajaran telah selesai dibaca/dipelajari oleh pengguna.",
+                "operationId": "544c0ce3a7ad6dcebd1198d310c51d39",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "id_material"
+                                ],
+                                "properties": {
+                                    "id_material": {
+                                        "description": "ID materi yang dibaca",
+                                        "type": "integer",
+                                        "example": 3
+                                    },
+                                    "is_completed": {
+                                        "description": "Status selesai (default: true)",
+                                        "type": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Progres materi berhasil diperbarui.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Progres materi berhasil diperbarui."
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id_material": {
+                                                    "type": "integer",
+                                                    "example": 3
+                                                },
+                                                "is_completed": {
+                                                    "type": "boolean",
+                                                    "example": true
+                                                },
+                                                "completed_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2026-09-28T21:45:00.000000Z",
+                                                    "nullable": true
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validasi gagal.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The id material field is required."
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/progress/molecule": {
+            "post": {
+                "tags": [
+                    "Progres Belajar"
+                ],
+                "summary": "Tandai Progres Eksplorasi Molekul 3D",
+                "description": "Mencatat bahwa suatu model molekul 3D telah selesai dieksplorasi oleh pengguna.",
+                "operationId": "588b78d3fd79497db48b482332dc6ec9",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "id_molecule"
+                                ],
+                                "properties": {
+                                    "id_molecule": {
+                                        "description": "ID molekul 3D",
+                                        "type": "integer",
+                                        "example": 5
+                                    },
+                                    "is_completed": {
+                                        "description": "Status selesai (default: true)",
+                                        "type": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Progres molekul berhasil diperbarui.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Progres molekul berhasil diperbarui."
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id_molecule": {
+                                                    "type": "integer",
+                                                    "example": 5
+                                                },
+                                                "is_completed": {
+                                                    "type": "boolean",
+                                                    "example": true
+                                                },
+                                                "completed_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2026-09-28T21:45:00.000000Z",
+                                                    "nullable": true
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validasi gagal.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The id molecule field is required."
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/progress/category": {
+            "post": {
+                "tags": [
+                    "Progres Belajar"
+                ],
+                "summary": "Tandai Progres Kuis / Soal Kategori Selesai",
+                "description": "Mencatat bahwa kumpulan latihan soal/kuis pada kategori tersebut telah selesai dikerjakan oleh pengguna.",
+                "operationId": "8a55e294115717f2357a7d75dabb5a49",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "id_category"
+                                ],
+                                "properties": {
+                                    "id_category": {
+                                        "description": "ID kategori yang soalnya telah diselesaikan",
+                                        "type": "integer",
+                                        "example": 2
+                                    },
+                                    "is_completed": {
+                                        "description": "Status selesai (default: true)",
+                                        "type": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Progres pengerjaan soal kategori berhasil diperbarui.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Progres pengerjaan soal kategori berhasil diperbarui."
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id_category": {
+                                                    "type": "integer",
+                                                    "example": 2
+                                                },
+                                                "is_completed": {
+                                                    "type": "boolean",
+                                                    "example": true
+                                                },
+                                                "completed_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2026-09-28T21:45:00.000000Z",
+                                                    "nullable": true
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validasi gagal.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The id category field is required."
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
         }
     },
     "components": {
@@ -1550,6 +2697,10 @@
             "description": "Master Data"
         },
         {
+            "name": "Latihan & Soal (Exercise)",
+            "description": "Latihan & Soal (Exercise)"
+        },
+        {
             "name": "Materi",
             "description": "Materi"
         },
@@ -1560,6 +2711,10 @@
         {
             "name": "Profile",
             "description": "Profile"
+        },
+        {
+            "name": "Progres Belajar",
+            "description": "Progres Belajar"
         }
     ]
 }
