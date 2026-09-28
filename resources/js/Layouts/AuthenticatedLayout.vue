@@ -14,6 +14,8 @@ import {
     LogOut,
     Menu,
     X,
+    FileCode2,
+    ExternalLink,
 } from 'lucide-vue-next';
 
 import { usePermission } from '@/composables/usePermission';
@@ -93,6 +95,7 @@ const systemNavigation = computed(() => {
             active: route().current('users.*'),
             icon: Users,
             show: can('users.view'),
+            isExternal: false,
         },
         {
             name: 'Modul RBAC & Akses',
@@ -100,6 +103,15 @@ const systemNavigation = computed(() => {
             active: route().current('roles.*'),
             icon: ShieldCheck,
             show: can('roles.view'),
+            isExternal: false,
+        },
+        {
+            name: 'Dokumentasi API',
+            href: '/api/documentation',
+            active: false,
+            icon: FileCode2,
+            show: can('api-docs.view'),
+            isExternal: true,
         },
     ];
 
@@ -253,28 +265,50 @@ onUnmounted(() => {
                     </div>
 
                     <nav class="space-y-1.5">
-                        <Link
+                        <template
                             v-for="item in systemNavigation"
                             :key="item.name"
-                            :href="item.href"
-                            :class="[
-                                'group flex items-center gap-3 rounded-lg px-3.5 py-2.5 text-sm font-medium transition-all duration-150',
-                                item.active
-                                    ? 'bg-[#16273b] text-[#e5a824] shadow-sm'
-                                    : 'text-slate-300 hover:bg-[#112338] hover:text-white',
-                            ]"
                         >
-                            <component
-                                :is="item.icon"
-                                class="h-5 w-5 shrink-0"
-                                :class="
+                            <a
+                                v-if="item.isExternal"
+                                :href="item.href"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="group flex items-center justify-between rounded-lg px-3.5 py-2.5 text-sm font-medium text-slate-300 transition-all duration-150 hover:bg-[#112338] hover:text-white"
+                            >
+                                <div class="flex items-center gap-3">
+                                    <component
+                                        :is="item.icon"
+                                        class="h-5 w-5 shrink-0 text-slate-400 group-hover:text-slate-200"
+                                    />
+                                    <span>{{ item.name }}</span>
+                                </div>
+                                <ExternalLink
+                                    class="h-4 w-4 text-slate-500 transition-colors group-hover:text-slate-300"
+                                />
+                            </a>
+                            <Link
+                                v-else
+                                :href="item.href"
+                                :class="[
+                                    'group flex items-center gap-3 rounded-lg px-3.5 py-2.5 text-sm font-medium transition-all duration-150',
                                     item.active
-                                        ? 'text-[#e5a824]'
-                                        : 'text-slate-400 group-hover:text-slate-200'
-                                "
-                            />
-                            <span>{{ item.name }}</span>
-                        </Link>
+                                        ? 'bg-[#16273b] text-[#e5a824] shadow-sm'
+                                        : 'text-slate-300 hover:bg-[#112338] hover:text-white',
+                                ]"
+                            >
+                                <component
+                                    :is="item.icon"
+                                    class="h-5 w-5 shrink-0"
+                                    :class="
+                                        item.active
+                                            ? 'text-[#e5a824]'
+                                            : 'text-slate-400 group-hover:text-slate-200'
+                                    "
+                                />
+                                <span>{{ item.name }}</span>
+                            </Link>
+                        </template>
                     </nav>
                 </div>
             </div>

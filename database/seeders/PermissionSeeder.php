@@ -53,6 +53,9 @@ class PermissionSeeder extends Seeder
                 'roles.manage' => 'Kelola Peran Pengguna',
                 'permissions.manage' => 'Ubah Matriks Hak Akses',
             ],
+            'Modul Sistem & API' => [
+                'api-docs.view' => 'Lihat Dokumentasi API (Swagger)',
+            ],
         ];
 
         $allPermissionNames = [];
@@ -94,6 +97,7 @@ class PermissionSeeder extends Seeder
                 'questions.edit',
                 'questions.delete',
                 'roles.view',
+                'api-docs.view',
             ]);
         }
     }

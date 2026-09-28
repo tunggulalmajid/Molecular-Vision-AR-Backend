@@ -1,0 +1,311 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Molecular Vision AR (MVAR) API Documentation",
+        "description": "Dokumentasi RESTful API untuk Molecular Vision AR (MVAR) Backend. API ini digunakan oleh aplikasi mobile (Flutter / Unity) dan client lainnya.",
+        "contact": {
+            "name": "Tim Pengembang MVAR",
+            "email": "dev@mvar.local"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "/api",
+            "description": "Current API Server"
+        },
+        {
+            "url": "http://localhost:8000/api",
+            "description": "Local Development Server"
+        }
+    ],
+    "paths": {
+        "/register": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Registrasi Pengguna Baru (Mobile / Siswa)",
+                "description": "Mendaftarkan akun siswa baru melalui aplikasi mobile dan mengembalikan personal access token (Sanctum) untuk autentikasi selanjutnya.",
+                "operationId": "3e85baa4a53c9308bd11e334eadafb22",
+                "requestBody": {
+                    "description": "Data pendaftaran akun siswa baru",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Budi Santoso",
+                                        "maxLength": 255
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "budi@example.com",
+                                        "maxLength": 255
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "Rahasia123!"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "Rahasia123!"
+                                    },
+                                    "school": {
+                                        "type": "string",
+                                        "example": "SMAN 1 Jakarta",
+                                        "nullable": true,
+                                        "maxLength": 255
+                                    },
+                                    "id_degree": {
+                                        "type": "integer",
+                                        "example": 1,
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Registrasi berhasil dan token autentikasi dibuat.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Registrasi berhasil."
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "user": {
+                                                    "properties": {
+                                                        "id_user": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "name": {
+                                                            "type": "string",
+                                                            "example": "Budi Santoso"
+                                                        },
+                                                        "email": {
+                                                            "type": "string",
+                                                            "example": "budi@example.com"
+                                                        },
+                                                        "school": {
+                                                            "type": "string",
+                                                            "example": "SMAN 1 Jakarta",
+                                                            "nullable": true
+                                                        },
+                                                        "id_degree": {
+                                                            "type": "integer",
+                                                            "example": 1,
+                                                            "nullable": true
+                                                        },
+                                                        "id_role": {
+                                                            "type": "integer",
+                                                            "example": 2,
+                                                            "nullable": true
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "token": {
+                                                    "type": "string",
+                                                    "example": "1|xyz123abc456..."
+                                                },
+                                                "token_type": {
+                                                    "type": "string",
+                                                    "example": "Bearer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validasi data gagal.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The email has already been taken."
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "email": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "The email has already been taken."
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": []
+            }
+        },
+        "/user": {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Ambil Profil Pengguna yang Sedang Login",
+                "description": "Mengembalikan detail profil pengguna yang sedang login berdasarkan Bearer Token Sanctum.",
+                "operationId": "5618cfe663c8f3ace65169a27c823265",
+                "responses": {
+                    "200": {
+                        "description": "Profil pengguna berhasil diambil.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id_user": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Budi Santoso"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "example": "budi@example.com"
+                                                },
+                                                "school": {
+                                                    "type": "string",
+                                                    "example": "SMAN 1 Jakarta",
+                                                    "nullable": true
+                                                },
+                                                "id_degree": {
+                                                    "type": "integer",
+                                                    "example": 1,
+                                                    "nullable": true
+                                                },
+                                                "id_role": {
+                                                    "type": "integer",
+                                                    "example": 2,
+                                                    "nullable": true
+                                                },
+                                                "role": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "integer",
+                                                            "example": 2
+                                                        },
+                                                        "name": {
+                                                            "type": "string",
+                                                            "example": "siswa (mobile)"
+                                                        }
+                                                    },
+                                                    "type": "object",
+                                                    "nullable": true
+                                                },
+                                                "degree": {
+                                                    "properties": {
+                                                        "id_degree": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "name": {
+                                                            "type": "string",
+                                                            "example": "SMA / MA"
+                                                        }
+                                                    },
+                                                    "type": "object",
+                                                    "nullable": true
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated - Token tidak valid atau tidak disertakan.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "sanctum": {
+                "type": "http",
+                "description": "Gunakan token Sanctum dengan format: Bearer <token>",
+                "name": "Authorization",
+                "in": "header",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Authentication",
+            "description": "Authentication"
+        },
+        {
+            "name": "User",
+            "description": "User"
+        }
+    ]
+}

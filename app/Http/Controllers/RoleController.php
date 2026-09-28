@@ -52,6 +52,9 @@ class RoleController extends Controller
             ['name' => 'roles.manage', 'label' => 'Kelola Peran Pengguna', 'description' => 'Membuat, mengubah, atau menghapus peran'],
             ['name' => 'permissions.manage', 'label' => 'Ubah Matriks Hak Akses', 'description' => 'Mengonfigurasi izin akses per peran'],
         ],
+        'Modul Sistem & API' => [
+            ['name' => 'api-docs.view', 'label' => 'Lihat Dokumentasi API', 'description' => 'Mengakses antarmuka dokumentasi Swagger / OpenAPI'],
+        ],
     ];
 
     /**
