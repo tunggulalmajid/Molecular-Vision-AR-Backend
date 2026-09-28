@@ -20,14 +20,195 @@
         }
     ],
     "paths": {
+        "/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Login Pengguna",
+                "description": "Melakukan autentikasi menggunakan email dan kata sandi, kemudian mengembalikan data user serta personal access token Sanctum.",
+                "operationId": "67d6d0fdd54fba132e1b6f55ca254183",
+                "requestBody": {
+                    "description": "Kredensial login pengguna",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "budi@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "Rahasia123!"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login berhasil.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Login berhasil."
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "user": {
+                                                    "properties": {
+                                                        "id_user": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "name": {
+                                                            "type": "string",
+                                                            "example": "Budi Santoso"
+                                                        },
+                                                        "email": {
+                                                            "type": "string",
+                                                            "example": "budi@example.com"
+                                                        },
+                                                        "school": {
+                                                            "type": "string",
+                                                            "example": "SMAN 1 Jakarta",
+                                                            "nullable": true
+                                                        },
+                                                        "id_degree": {
+                                                            "type": "integer",
+                                                            "example": 1,
+                                                            "nullable": true
+                                                        },
+                                                        "id_role": {
+                                                            "type": "integer",
+                                                            "example": 2,
+                                                            "nullable": true
+                                                        },
+                                                        "role": {
+                                                            "properties": {
+                                                                "id": {
+                                                                    "type": "integer",
+                                                                    "example": 2
+                                                                },
+                                                                "name": {
+                                                                    "type": "string",
+                                                                    "example": "siswa (mobile)"
+                                                                }
+                                                            },
+                                                            "type": "object",
+                                                            "nullable": true
+                                                        },
+                                                        "degree": {
+                                                            "properties": {
+                                                                "id_degree": {
+                                                                    "type": "integer",
+                                                                    "example": 1
+                                                                },
+                                                                "name": {
+                                                                    "type": "string",
+                                                                    "example": "SMA / MA"
+                                                                }
+                                                            },
+                                                            "type": "object",
+                                                            "nullable": true
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "token": {
+                                                    "type": "string",
+                                                    "example": "1|xyz123abc456..."
+                                                },
+                                                "token_type": {
+                                                    "type": "string",
+                                                    "example": "Bearer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Kredensial tidak valid (email atau kata sandi salah).",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Email atau kata sandi tidak valid."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validasi form gagal.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The email field is required."
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "email": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "The email field is required."
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": []
+            }
+        },
         "/register": {
             "post": {
                 "tags": [
-                    "Authentication"
+                    "Auth"
                 ],
-                "summary": "Registrasi Pengguna Baru (Mobile / Siswa)",
+                "summary": "Registrasi Pengguna Baru",
                 "description": "Mendaftarkan akun siswa baru melalui aplikasi mobile dan mengembalikan personal access token (Sanctum) untuk autentikasi selanjutnya.",
-                "operationId": "3e85baa4a53c9308bd11e334eadafb22",
+                "operationId": "5d4fa5d5607ed675ba93907e1fc94534",
                 "requestBody": {
                     "description": "Data pendaftaran akun siswa baru",
                     "required": true,
@@ -52,11 +233,6 @@
                                         "maxLength": 255
                                     },
                                     "password": {
-                                        "type": "string",
-                                        "format": "password",
-                                        "example": "Rahasia123!"
-                                    },
-                                    "password_confirmation": {
                                         "type": "string",
                                         "format": "password",
                                         "example": "Rahasia123!"
@@ -123,6 +299,34 @@
                                                             "type": "integer",
                                                             "example": 2,
                                                             "nullable": true
+                                                        },
+                                                        "role": {
+                                                            "properties": {
+                                                                "id": {
+                                                                    "type": "integer",
+                                                                    "example": 2
+                                                                },
+                                                                "name": {
+                                                                    "type": "string",
+                                                                    "example": "siswa (mobile)"
+                                                                }
+                                                            },
+                                                            "type": "object",
+                                                            "nullable": true
+                                                        },
+                                                        "degree": {
+                                                            "properties": {
+                                                                "id_degree": {
+                                                                    "type": "integer",
+                                                                    "example": 1
+                                                                },
+                                                                "name": {
+                                                                    "type": "string",
+                                                                    "example": "SMA / MA"
+                                                                }
+                                                            },
+                                                            "type": "object",
+                                                            "nullable": true
                                                         }
                                                     },
                                                     "type": "object"
@@ -145,7 +349,7 @@
                         }
                     },
                     "422": {
-                        "description": "Validasi data gagal.",
+                        "description": "Validasi data registrasi gagal.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -176,14 +380,14 @@
                 "security": []
             }
         },
-        "/user": {
+        "/me": {
             "get": {
                 "tags": [
-                    "User"
+                    "Auth"
                 ],
-                "summary": "Ambil Profil Pengguna yang Sedang Login",
+                "summary": "Ambil Profil Pengguna (Me)",
                 "description": "Mengembalikan detail profil pengguna yang sedang login berdasarkan Bearer Token Sanctum.",
-                "operationId": "5618cfe663c8f3ace65169a27c823265",
+                "operationId": "bc2032a379aa97707ccc61511897c120",
                 "responses": {
                     "200": {
                         "description": "Profil pengguna berhasil diambil.",
@@ -195,62 +399,71 @@
                                             "type": "boolean",
                                             "example": true
                                         },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Data profil berhasil diambil."
+                                        },
                                         "data": {
                                             "properties": {
-                                                "id_user": {
-                                                    "type": "integer",
-                                                    "example": 1
-                                                },
-                                                "name": {
-                                                    "type": "string",
-                                                    "example": "Budi Santoso"
-                                                },
-                                                "email": {
-                                                    "type": "string",
-                                                    "example": "budi@example.com"
-                                                },
-                                                "school": {
-                                                    "type": "string",
-                                                    "example": "SMAN 1 Jakarta",
-                                                    "nullable": true
-                                                },
-                                                "id_degree": {
-                                                    "type": "integer",
-                                                    "example": 1,
-                                                    "nullable": true
-                                                },
-                                                "id_role": {
-                                                    "type": "integer",
-                                                    "example": 2,
-                                                    "nullable": true
-                                                },
-                                                "role": {
+                                                "user": {
                                                     "properties": {
-                                                        "id": {
-                                                            "type": "integer",
-                                                            "example": 2
-                                                        },
-                                                        "name": {
-                                                            "type": "string",
-                                                            "example": "siswa (mobile)"
-                                                        }
-                                                    },
-                                                    "type": "object",
-                                                    "nullable": true
-                                                },
-                                                "degree": {
-                                                    "properties": {
-                                                        "id_degree": {
+                                                        "id_user": {
                                                             "type": "integer",
                                                             "example": 1
                                                         },
                                                         "name": {
                                                             "type": "string",
-                                                            "example": "SMA / MA"
+                                                            "example": "Budi Santoso"
+                                                        },
+                                                        "email": {
+                                                            "type": "string",
+                                                            "example": "budi@example.com"
+                                                        },
+                                                        "school": {
+                                                            "type": "string",
+                                                            "example": "SMAN 1 Jakarta",
+                                                            "nullable": true
+                                                        },
+                                                        "id_degree": {
+                                                            "type": "integer",
+                                                            "example": 1,
+                                                            "nullable": true
+                                                        },
+                                                        "id_role": {
+                                                            "type": "integer",
+                                                            "example": 2,
+                                                            "nullable": true
+                                                        },
+                                                        "role": {
+                                                            "properties": {
+                                                                "id": {
+                                                                    "type": "integer",
+                                                                    "example": 2
+                                                                },
+                                                                "name": {
+                                                                    "type": "string",
+                                                                    "example": "siswa (mobile)"
+                                                                }
+                                                            },
+                                                            "type": "object",
+                                                            "nullable": true
+                                                        },
+                                                        "degree": {
+                                                            "properties": {
+                                                                "id_degree": {
+                                                                    "type": "integer",
+                                                                    "example": 1
+                                                                },
+                                                                "name": {
+                                                                    "type": "string",
+                                                                    "example": "SMA / MA"
+                                                                }
+                                                            },
+                                                            "type": "object",
+                                                            "nullable": true
                                                         }
                                                     },
-                                                    "type": "object",
-                                                    "nullable": true
+                                                    "type": "object"
                                                 }
                                             },
                                             "type": "object"
@@ -284,6 +497,1031 @@
                     }
                 ]
             }
+        },
+        "/refresh": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Pembaruan Token Autentikasi (Refresh)",
+                "description": "Memperbarui token autentikasi lama (termasuk yang sudah kedaluwarsa) dengan token baru. Token lama dapat dikirimkan melalui Authorization Bearer header atau body { \"token\": \"...\" }.",
+                "operationId": "43a6bea9efa4b685457298ce9505de70",
+                "requestBody": {
+                    "description": "Token lama (opsional jika sudah dikirim via header Authorization Bearer)",
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "token": {
+                                        "type": "string",
+                                        "example": "1|xyz123abc456..."
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Token berhasil diperbarui.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Token autentikasi berhasil diperbarui."
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "token": {
+                                                    "type": "string",
+                                                    "example": "2|new_token_string..."
+                                                },
+                                                "token_type": {
+                                                    "type": "string",
+                                                    "example": "Bearer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Token tidak valid atau tidak ditemukan.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Token tidak valid atau sudah tidak terdaftar."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": []
+            }
+        },
+        "/logout": {
+            "delete": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Logout Pengguna (Cabut Token)",
+                "description": "Mencabut (menghapus) token personal access Sanctum yang sedang aktif digunakan.",
+                "operationId": "091884718461f829a9a6277f90c8be66",
+                "responses": {
+                    "200": {
+                        "description": "Logout berhasil.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Logout berhasil. Token telah dicabut."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated - Token tidak valid atau sudah tidak aktif.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/categories": {
+            "get": {
+                "tags": [
+                    "Kategori"
+                ],
+                "summary": "Daftar Kategori Pembelajaran Kimia",
+                "description": "Mengambil daftar kategori materi kimia beserta jumlah materi dan latihan soal yang tersedia.",
+                "operationId": "b1b247b2b491b0491c3c728dc33f23f0",
+                "responses": {
+                    "200": {
+                        "description": "Daftar kategori berhasil diambil.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Daftar kategori kimia berhasil diambil."
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id_category": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "Stoikiometri"
+                                                    },
+                                                    "description": {
+                                                        "type": "string",
+                                                        "example": "Mempelajari konsep mol, rumus empiris, dan stoikiometri larutan."
+                                                    },
+                                                    "materials_count": {
+                                                        "type": "integer",
+                                                        "example": 4
+                                                    },
+                                                    "questions_count": {
+                                                        "type": "integer",
+                                                        "example": 15
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated - Token tidak valid atau tidak disertakan.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/degrees": {
+            "get": {
+                "tags": [
+                    "Master Data"
+                ],
+                "summary": "Daftar Jenjang Kelas (Degrees)",
+                "description": "Mengambil seluruh master data jenjang kelas (misal: Kelas 10, Kelas 11, Kelas 12) untuk kebutuhan opsi registrasi atau pembaruan profil.",
+                "operationId": "57c07eb03c72d14248835feee589de37",
+                "responses": {
+                    "200": {
+                        "description": "Daftar jenjang kelas berhasil diambil.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Daftar jenjang kelas berhasil diambil."
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id_degree": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "Kelas 10"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": []
+            }
+        },
+        "/materials": {
+            "get": {
+                "tags": [
+                    "Materi"
+                ],
+                "summary": "Daftar Materi Pembelajaran Kimia",
+                "description": "Mengambil daftar ringkas materi pembelajaran kimia dengan opsi filter kategori dan pencarian judul materi.",
+                "operationId": "fa952cf0966de3a090a9c0ad9b075b39",
+                "parameters": [
+                    {
+                        "name": "id_category",
+                        "in": "query",
+                        "description": "Filter materi berdasarkan ID kategori kimia (misal: 1 untuk Stoikiometri)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Kata kunci pencarian judul atau deskripsi materi",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "Hukum Dasar"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Daftar materi berhasil diambil.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Daftar materi berhasil diambil."
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id_material": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "id_category": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "Hukum Dasar Kimia & Konsep Mol"
+                                                    },
+                                                    "description": {
+                                                        "type": "string",
+                                                        "example": "Pengantar perhitungan kimia dan stoikiometri dasar."
+                                                    },
+                                                    "category": {
+                                                        "properties": {
+                                                            "id_category": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "Stoikiometri"
+                                                            }
+                                                        },
+                                                        "type": "object",
+                                                        "nullable": true
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated - Token tidak valid atau tidak disertakan.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/materials/{id}": {
+            "get": {
+                "tags": [
+                    "Materi"
+                ],
+                "summary": "Detail Konten Materi Pembelajaran",
+                "description": "Mengambil detail lengkap materi pembelajaran kimia termasuk isi konten teori (HTML / teks).",
+                "operationId": "4c9307cd61989b969d7eb250eaa5260f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID materi pembelajaran",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detail materi berhasil diambil.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Detail materi berhasil diambil."
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id_material": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "id_category": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Hukum Dasar Kimia & Konsep Mol"
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "example": "Pengantar perhitungan kimia dan stoikiometri dasar."
+                                                },
+                                                "content": {
+                                                    "type": "string",
+                                                    "example": "<h2>Konsep Mol</h2><p>Mol adalah satuan dasar dalam SI yang menyatakan jumlah zat...</p>"
+                                                },
+                                                "category": {
+                                                    "properties": {
+                                                        "id_category": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "name": {
+                                                            "type": "string",
+                                                            "example": "Stoikiometri"
+                                                        }
+                                                    },
+                                                    "type": "object",
+                                                    "nullable": true
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated - Token tidak valid atau tidak disertakan.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Materi pembelajaran tidak ditemukan.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Materi pembelajaran tidak ditemukan."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/molecules": {
+            "get": {
+                "tags": [
+                    "Molekul"
+                ],
+                "summary": "Daftar Katalog Molekul 3D",
+                "description": "Mengambil daftar seluruh molekul kimia 3D dengan opsi pencarian (berdasarkan nama atau rumus kimia) dan filter bentuk geometri.",
+                "operationId": "e554a52fa5b17bfb6bdda5a5ed4c043c",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Kata kunci pencarian nama atau rumus molekul (misal: Air, H2O, CH4)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "H2O"
+                        }
+                    },
+                    {
+                        "name": "shape",
+                        "in": "query",
+                        "description": "Filter berdasarkan bentuk geometri molekul (misal: Linear, Bent, Tetrahedral)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "Bent"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Daftar molekul berhasil diambil.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Daftar molekul berhasil diambil."
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id_molecule": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "Air"
+                                                    },
+                                                    "formula": {
+                                                        "type": "string",
+                                                        "example": "H2O"
+                                                    },
+                                                    "shape": {
+                                                        "type": "string",
+                                                        "example": "Bengkok (Bent)"
+                                                    },
+                                                    "bent": {
+                                                        "type": "string",
+                                                        "example": "104.5°"
+                                                    },
+                                                    "bond_type": {
+                                                        "type": "string",
+                                                        "example": "Kovalen Polar"
+                                                    },
+                                                    "model_3d_url": {
+                                                        "type": "string",
+                                                        "example": "https://storage.googleapis.com/.../h2o.glb"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated - Token tidak valid atau tidak disertakan.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/molecules/{id}": {
+            "get": {
+                "tags": [
+                    "Molekul"
+                ],
+                "summary": "Detail Molekul 3D",
+                "description": "Mengambil detail lengkap suatu molekul kimia termasuk deskripsi teori dan URL model 3D.",
+                "operationId": "204af82e0f4082a9ea42fe7a8e611b53",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID molekul kimia",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detail molekul berhasil diambil.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Detail molekul berhasil diambil."
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id_molecule": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Air"
+                                                },
+                                                "formula": {
+                                                    "type": "string",
+                                                    "example": "H2O"
+                                                },
+                                                "shape": {
+                                                    "type": "string",
+                                                    "example": "Bengkok (Bent)"
+                                                },
+                                                "bent": {
+                                                    "type": "string",
+                                                    "example": "104.5°"
+                                                },
+                                                "bond_type": {
+                                                    "type": "string",
+                                                    "example": "Kovalen Polar"
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "example": "Molekul air terdiri atas dua atom hidrogen yang berikatan kovalen dengan satu atom oksigen..."
+                                                },
+                                                "model_3d_url": {
+                                                    "type": "string",
+                                                    "example": "https://storage.googleapis.com/.../h2o.glb"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated - Token tidak valid atau tidak disertakan.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Molekul kimia tidak ditemukan.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Molekul kimia tidak ditemukan."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/profile": {
+            "put": {
+                "tags": [
+                    "Profile"
+                ],
+                "summary": "Pembaruan Profil Pengguna",
+                "description": "Memperbarui data profil pengguna yang sedang login (nama, email, sekolah, dan jenjang kelas).",
+                "operationId": "74599296b1816be41ad4228975229966",
+                "requestBody": {
+                    "description": "Data profil yang akan diperbarui",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Budi Santoso",
+                                        "maxLength": 255
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "budi_baru@example.com",
+                                        "maxLength": 255
+                                    },
+                                    "school": {
+                                        "type": "string",
+                                        "example": "SMAN 1 Jakarta",
+                                        "nullable": true,
+                                        "maxLength": 255
+                                    },
+                                    "id_degree": {
+                                        "type": "integer",
+                                        "example": 2,
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Profil berhasil diperbarui.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Profil berhasil diperbarui."
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "user": {
+                                                    "properties": {
+                                                        "id_user": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "name": {
+                                                            "type": "string",
+                                                            "example": "Budi Santoso"
+                                                        },
+                                                        "email": {
+                                                            "type": "string",
+                                                            "example": "budi_baru@example.com"
+                                                        },
+                                                        "school": {
+                                                            "type": "string",
+                                                            "example": "SMAN 1 Jakarta",
+                                                            "nullable": true
+                                                        },
+                                                        "id_degree": {
+                                                            "type": "integer",
+                                                            "example": 2,
+                                                            "nullable": true
+                                                        },
+                                                        "id_role": {
+                                                            "type": "integer",
+                                                            "example": 2,
+                                                            "nullable": true
+                                                        },
+                                                        "role": {
+                                                            "properties": {
+                                                                "id": {
+                                                                    "type": "integer",
+                                                                    "example": 2
+                                                                },
+                                                                "name": {
+                                                                    "type": "string",
+                                                                    "example": "siswa (mobile)"
+                                                                }
+                                                            },
+                                                            "type": "object",
+                                                            "nullable": true
+                                                        },
+                                                        "degree": {
+                                                            "properties": {
+                                                                "id_degree": {
+                                                                    "type": "integer",
+                                                                    "example": 2
+                                                                },
+                                                                "name": {
+                                                                    "type": "string",
+                                                                    "example": "Kelas 11"
+                                                                }
+                                                            },
+                                                            "type": "object",
+                                                            "nullable": true
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated - Token tidak valid atau tidak disertakan.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validasi form gagal.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The email has already been taken."
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "email": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "The email has already been taken."
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/profile/password": {
+            "put": {
+                "tags": [
+                    "Profile"
+                ],
+                "summary": "Pembaruan Kata Sandi (Password)",
+                "description": "Memperbarui kata sandi akun pengguna dengan memverifikasi kata sandi lama terlebih dahulu.",
+                "operationId": "40f40b3f02ad252300bd78e362f6ef95",
+                "requestBody": {
+                    "description": "Data kata sandi lama dan baru",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "current_password",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "current_password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "Rahasia123!"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "PasswordBaru123!"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Kata sandi berhasil diperbarui.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Kata sandi berhasil diperbarui."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated - Token tidak valid atau tidak disertakan.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Kata sandi lama tidak sesuai atau format password baru tidak valid.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Kata sandi lama tidak sesuai."
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "current_password": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "Kata sandi lama tidak sesuai."
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
         }
     },
     "components": {
@@ -300,12 +1538,28 @@
     },
     "tags": [
         {
-            "name": "Authentication",
-            "description": "Authentication"
+            "name": "Auth",
+            "description": "Auth"
         },
         {
-            "name": "User",
-            "description": "User"
+            "name": "Kategori",
+            "description": "Kategori"
+        },
+        {
+            "name": "Master Data",
+            "description": "Master Data"
+        },
+        {
+            "name": "Materi",
+            "description": "Materi"
+        },
+        {
+            "name": "Molekul",
+            "description": "Molekul"
+        },
+        {
+            "name": "Profile",
+            "description": "Profile"
         }
     ]
 }
