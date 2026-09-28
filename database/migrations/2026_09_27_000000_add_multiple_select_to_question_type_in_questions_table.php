@@ -10,7 +10,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        DB::statement("ALTER TABLE `questions` MODIFY COLUMN `question_type` ENUM('multiple_choice', 'multiple_select', 'true_false', 'short_answer', 'matching') NOT NULL");
+        if (DB::getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE `questions` MODIFY COLUMN `question_type` ENUM('multiple_choice', 'multiple_select', 'true_false', 'short_answer', 'matching') NOT NULL");
+        }
     }
 
     /**
@@ -18,6 +20,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        DB::statement("ALTER TABLE `questions` MODIFY COLUMN `question_type` ENUM('multiple_choice', 'true_false', 'short_answer', 'matching') NOT NULL");
+        if (DB::getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE `questions` MODIFY COLUMN `question_type` ENUM('multiple_choice', 'true_false', 'short_answer', 'matching') NOT NULL");
+        }
     }
 };

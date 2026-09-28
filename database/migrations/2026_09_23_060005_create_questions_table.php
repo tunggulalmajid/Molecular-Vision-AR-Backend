@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('id_category')->constrained('categories', 'id_category')->cascadeOnDelete();
             $table->enum('question_type', [
                 'multiple_choice',
+                'multiple_select',
                 'true_false',
                 'short_answer',
                 'matching',
