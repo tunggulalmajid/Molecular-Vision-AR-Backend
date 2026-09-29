@@ -1,21 +1,31 @@
 # ==========================================
-# Stage 1: Build Frontend Assets (Vite + Vue)
+# Stage 1: Build Application (PHP 8.3 + Node 22 + Composer)
 # ==========================================
-FROM node:22-alpine AS frontend-builder
+FROM php:8.3-cli-alpine AS builder
+
 WORKDIR /app
 
-COPY package*.json ./
-RUN npm ci
+# Install Node.js, NPM, Composer, dan tools pendukung
+RUN apk add --no-cache \
+    nodejs \
+    npm \
+    git \
+    unzip \
+    libzip-dev \
+    icu-dev \
+    oniguruma-dev \
+    libxml2-dev \
+    sqlite-dev \
+    && docker-php-ext-install -j$(nproc) \
+        bcmath \
+        intl \
+        zip \
+        pdo_sqlite
 
-COPY . .
-RUN npm run build
+# Ambil binary Composer resmi
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# ==========================================
-# Stage 2: Install Composer Dependencies
-# ==========================================
-FROM composer:2 AS composer-builder
-WORKDIR /app
-
+# 1. Install Composer dependencies
 COPY composer*.json composer.lock ./
 RUN composer install \
     --no-dev \
@@ -25,8 +35,20 @@ RUN composer install \
     --no-scripts \
     --ignore-platform-reqs
 
+# 2. Install Node dependencies
+COPY package*.json ./
+RUN npm ci
+
+# 3. Salin source code & buat .env dummy untuk artisan wayfinder
+COPY . .
+RUN cp .env.example .env && php artisan key:generate --force
+
+# 4. Generate wayfinder types & build frontend
+RUN php artisan wayfinder:generate --with-form || true
+RUN npm run build
+
 # ==========================================
-# Stage 3: Production Runtime (PHP 8.3 + Nginx)
+# Stage 2: Production Runtime (PHP 8.3 FPM + Nginx)
 # ==========================================
 FROM php:8.3-fpm-alpine AS production
 
@@ -75,14 +97,11 @@ COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
-# Salin source code project
-COPY . .
+# Salin hasil build lengkap dari builder (sudah include vendor dan public/build)
+COPY --from=builder /app /var/www/html
 
-# Salin hasil build frontend dari Stage 1
-COPY --from=frontend-builder /app/public/build ./public/build
-
-# Salin vendor dependencies dari Stage 2
-COPY --from=composer-builder /app/vendor ./vendor
+# Hapus file .env dummy build agar tidak menimpa .env production VPS
+RUN rm -f /var/www/html/.env
 
 # Set permission file untuk user www-data
 RUN chown -R www-data:www-data /var/www/html \
