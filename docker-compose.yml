@@ -1,45 +1,55 @@
 services:
-  app:
-    image: ${DOCKER_IMAGE:-ghcr.io/tunggulalmajid/molecular-vision-ar-backend:latest}
-    container_name: mvar_app
-    restart: unless-stopped
-    ports:
-      - "${APP_PORT:-8000}:80"
-    env_file:
-      - .env
-    volumes:
-      - app_storage:/var/www/html/storage
-    depends_on:
-      db:
-        condition: service_healthy
-    networks:
-      - mvar_network
+    app:
+        image: ${DOCKER_IMAGE:-ghcr.io/tunggulalmajid/molecular-vision-ar-backend:latest}
+        container_name: mvar_app
+        restart: unless-stopped
+        ports:
+            - '${APP_PORT:-8000}:80'
+        env_file:
+            - .env
+        volumes:
+            - app_storage:/var/www/html/storage
+        depends_on:
+            db:
+                condition: service_healthy
+        networks:
+            - mvar_network
 
-  db:
-    image: mysql:8.0
-    container_name: mvar_mysql
-    restart: unless-stopped
-    command: --default-authentication-plugin=mysql_native_password
-    environment:
-      MYSQL_DATABASE: ${DB_DATABASE:-db_mvar}
-      MYSQL_USER: ${DB_USERNAME:-mvar_user}
-      MYSQL_PASSWORD: ${DB_PASSWORD:-secret}
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootsecret}
-    volumes:
-      - db_data:/var/lib/mysql
-    networks:
-      - mvar_network
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD:-rootsecret}"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
+    db:
+        image: mysql:8.0
+        container_name: mvar_mysql
+        restart: unless-stopped
+        command: --default-authentication-plugin=mysql_native_password
+        environment:
+            MYSQL_DATABASE: ${DB_DATABASE:-db_mvar}
+            MYSQL_USER: ${DB_USERNAME:-mvar_user}
+            MYSQL_PASSWORD: ${DB_PASSWORD:-secret}
+            MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootsecret}
+        volumes:
+            - db_data:/var/lib/mysql
+        networks:
+            - mvar_network
+        healthcheck:
+            test:
+                [
+                    'CMD',
+                    'mysqladmin',
+                    'ping',
+                    '-h',
+                    'localhost',
+                    '-u',
+                    'root',
+                    '-p${DB_ROOT_PASSWORD:-rootsecret}',
+                ]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+            start_period: 30s
 
 networks:
-  mvar_network:
-    driver: bridge
+    mvar_network:
+        driver: bridge
 
 volumes:
-  app_storage:
-  db_data:
+    app_storage:
+    db_data:
