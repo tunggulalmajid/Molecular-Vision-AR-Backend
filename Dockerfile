@@ -91,6 +91,14 @@ RUN { \
         echo 'opcache.fast_shutdown=1'; \
     } > /usr/local/etc/php/conf.d/opcache-recommended.ini
 
+# Konfigurasi batas upload dan memori PHP (untuk model 3D .glb & media)
+RUN { \
+        echo 'upload_max_filesize = 100M'; \
+        echo 'post_max_size = 100M'; \
+        echo 'memory_limit = 256M'; \
+        echo 'max_execution_time = 300'; \
+    } > /usr/local/etc/php/conf.d/uploads.ini
+
 # Salin konfigurasi Nginx dan Supervisord
 COPY docker/nginx.conf /etc/nginx/http.d/default.conf
 COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
