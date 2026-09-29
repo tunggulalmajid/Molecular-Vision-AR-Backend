@@ -1,0 +1,158 @@
+name: CI/CD Pipeline (Docker & Production Deploy)
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  # ==========================================
+  # Job 1: Automated Testing & Linting
+  # ==========================================
+  test:
+    name: Run Automated Tests & Checks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, fileinfo, gd, intl
+          tools: composer:v2
+          coverage: none
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Setup Application
+        run: composer setup
+
+      - name: Run CI Checks (Pint, PHPStan, Tests)
+        run: composer ci:check
+
+  # ==========================================
+  # Job 2: Build & Push Docker Image to GHCR
+  # ==========================================
+  build-image:
+    name: Build & Push Docker Image
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value=latest
+            type=sha,format=short
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # ==========================================
+  # Job 3: Deploy to VPS via SSH & Docker
+  # ==========================================
+  deploy-vps:
+    name: Deploy to Production VPS
+    needs: build-image
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code (for docker-compose.yml)
+        uses: actions/checkout@v4
+
+      - name: Copy docker-compose.yml to VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          source: "docker-compose.yml"
+          target: ${{ secrets.TARGET_DIR }}
+
+      - name: Execute Remote Deployment via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          script: |
+            set -e
+
+            echo "🚀 [CI/CD] Masuk ke folder target VPS..."
+            mkdir -p ${{ secrets.TARGET_DIR }}
+            cd ${{ secrets.TARGET_DIR }}
+
+            echo "🔒 [CI/CD] Menginjeksi file .env dari GitHub Secret (ENV_PRODUCTION)..."
+            cat << 'EOF' > .env
+            ${{ secrets.ENV_PRODUCTION }}
+            EOF
+            chmod 600 .env
+
+            echo "🔑 [CI/CD] Login ke GitHub Container Registry di VPS..."
+            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+
+            echo "📦 [CI/CD] Menarik image Docker terbaru..."
+            LOWER_REPO=$(echo "${{ env.IMAGE_NAME }}" | tr '[:upper:]' '[:lower:]')
+            export DOCKER_IMAGE="${{ env.REGISTRY }}/${LOWER_REPO}:latest"
+            docker compose pull
+
+            echo "🔄 [CI/CD] Menjalankan container dengan zero-downtime..."
+            docker compose up -d --remove-orphans
+
+            echo "⏳ [CI/CD] Menunggu database siap..."
+            sleep 5
+
+            echo "🗄️ [CI/CD] Menjalankan migrasi database..."
+            docker compose exec -T app php artisan migrate --force
+
+            echo "⚡ [CI/CD] Optimasi cache Laravel production..."
+            docker compose exec -T app php artisan optimize:clear
+            docker compose exec -T app php artisan optimize
+
+            echo "📚 [CI/CD] Regenerasi dokumentasi Swagger..."
+            docker compose exec -T app php artisan l5-swagger:generate || true
+
+            echo "🧹 [CI/CD] Membersihkan image docker lama yang tidak terpakai..."
+            docker image prune -f
+
+            echo "✅ [CI/CD] Deployment berhasil diselesaikan dengan sukses!"

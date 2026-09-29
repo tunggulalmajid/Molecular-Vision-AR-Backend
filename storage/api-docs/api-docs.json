@@ -22,7 +22,9 @@
     "paths": {
         "/login": {
             "post": {
-                "tags": ["Auth"],
+                "tags": [
+                    "Auth"
+                ],
                 "summary": "Login Pengguna",
                 "description": "Melakukan autentikasi menggunakan email dan kata sandi, kemudian mengembalikan data user serta personal access token Sanctum.",
                 "operationId": "67d6d0fdd54fba132e1b6f55ca254183",
@@ -32,7 +34,10 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "required": ["email", "password"],
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
                                 "properties": {
                                     "email": {
                                         "type": "string",
@@ -198,7 +203,9 @@
         },
         "/register": {
             "post": {
-                "tags": ["Auth"],
+                "tags": [
+                    "Auth"
+                ],
                 "summary": "Registrasi Pengguna Baru",
                 "description": "Mendaftarkan akun siswa baru melalui aplikasi mobile dan mengembalikan personal access token (Sanctum) untuk autentikasi selanjutnya.",
                 "operationId": "5d4fa5d5607ed675ba93907e1fc94534",
@@ -208,7 +215,11 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "required": ["name", "email", "password"],
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "password"
+                                ],
                                 "properties": {
                                     "name": {
                                         "type": "string",
@@ -371,7 +382,9 @@
         },
         "/me": {
             "get": {
-                "tags": ["Auth"],
+                "tags": [
+                    "Auth"
+                ],
                 "summary": "Ambil Profil Pengguna (Me)",
                 "description": "Mengembalikan detail profil pengguna yang sedang login berdasarkan Bearer Token Sanctum.",
                 "operationId": "bc2032a379aa97707ccc61511897c120",
@@ -487,7 +500,9 @@
         },
         "/refresh": {
             "post": {
-                "tags": ["Auth"],
+                "tags": [
+                    "Auth"
+                ],
                 "summary": "Pembaruan Token Autentikasi (Refresh)",
                 "description": "Memperbarui token autentikasi lama (termasuk yang sudah kedaluwarsa) dengan token baru. Token lama dapat dikirimkan melalui Authorization Bearer header atau body { \"token\": \"...\" }.",
                 "operationId": "43a6bea9efa4b685457298ce9505de70",
@@ -568,7 +583,9 @@
         },
         "/logout": {
             "delete": {
-                "tags": ["Auth"],
+                "tags": [
+                    "Auth"
+                ],
                 "summary": "Logout Pengguna (Cabut Token)",
                 "description": "Mencabut (menghapus) token personal access Sanctum yang sedang aktif digunakan.",
                 "operationId": "091884718461f829a9a6277f90c8be66",
@@ -619,7 +636,9 @@
         },
         "/categories": {
             "get": {
-                "tags": ["Kategori"],
+                "tags": [
+                    "Kategori"
+                ],
                 "summary": "Daftar Kategori Pembelajaran Kimia",
                 "description": "Mengambil daftar kategori materi kimia beserta jumlah materi dan latihan soal yang tersedia.",
                 "operationId": "b1b247b2b491b0491c3c728dc33f23f0",
@@ -698,7 +717,9 @@
         },
         "/degrees": {
             "get": {
-                "tags": ["Master Data"],
+                "tags": [
+                    "Master Data"
+                ],
                 "summary": "Daftar Jenjang Kelas (Degrees)",
                 "description": "Mengambil seluruh master data jenjang kelas (misal: Kelas 10, Kelas 11, Kelas 12) untuk kebutuhan opsi registrasi atau pembaruan profil.",
                 "operationId": "57c07eb03c72d14248835feee589de37",
@@ -745,7 +766,9 @@
         },
         "/exercises": {
             "get": {
-                "tags": ["Latihan & Soal (Exercise)"],
+                "tags": [
+                    "Latihan & Soal (Exercise)"
+                ],
                 "summary": "Katalog Kategori Latihan Soal",
                 "description": "Mengambil seluruh kategori soal latihan beserta jumlah butir soal yang tersedia pada masing-masing kategori.",
                 "operationId": "600c5637bf3a0ab6ecc915f8bf92cc2d",
@@ -820,7 +843,9 @@
         },
         "/exercises/{id_category}": {
             "get": {
-                "tags": ["Latihan & Soal (Exercise)"],
+                "tags": [
+                    "Latihan & Soal (Exercise)"
+                ],
                 "summary": "Ambil Butir Soal Kuis (Anti-Cheat)",
                 "description": "Mengambil daftar butir soal latihan untuk kategori tertentu. Seluruh kunci jawaban (is_correct) disembunyikan agar tidak terjadi kebocoran kunci jawaban ke client mobile.",
                 "operationId": "a16560be2c988c58f227f9de0dad7e03",
@@ -971,7 +996,9 @@
                 ]
             },
             "post": {
-                "tags": ["Latihan & Soal (Exercise)"],
+                "tags": [
+                    "Latihan & Soal (Exercise)"
+                ],
                 "summary": "Submit Jawaban Kuis & Auto-Grading",
                 "description": "Mengirimkan seluruh jawaban siswa untuk kategori tersebut. Server melakukan evaluasi otomatis (grading) untuk ke-5 tipe soal, menyimpan hasil latihan, dan otomatis memperbarui progres kategori (UserCategoryProgress).",
                 "operationId": "3ddee6f8155c6f0738847af30f6c5a4c",
@@ -992,7 +1019,9 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "required": ["answers"],
+                                "required": [
+                                    "answers"
+                                ],
                                 "properties": {
                                     "answers": {
                                         "type": "array",
@@ -1169,7 +1198,9 @@
         },
         "/exercises/{id_category}/result": {
             "get": {
-                "tags": ["Latihan & Soal (Exercise)"],
+                "tags": [
+                    "Latihan & Soal (Exercise)"
+                ],
                 "summary": "Rapor Hasil Latihan Kategori",
                 "description": "Mengambil riwayat/rapor pengerjaan kuis siswa khusus untuk kategori tersebut, mencakup skor nilai, jumlah benar/salah, tanggal pengerjaan, dan review butir soal.",
                 "operationId": "8c037cb55b771e51723e4c4e99e26441",
@@ -1344,7 +1375,9 @@
         },
         "/materials": {
             "get": {
-                "tags": ["Materi"],
+                "tags": [
+                    "Materi"
+                ],
                 "summary": "Daftar Materi Pembelajaran Kimia",
                 "description": "Mengambil daftar ringkas materi pembelajaran kimia dengan opsi filter kategori dan pencarian judul materi.",
                 "operationId": "fa952cf0966de3a090a9c0ad9b075b39",
@@ -1455,7 +1488,9 @@
         },
         "/materials/{id}": {
             "get": {
-                "tags": ["Materi"],
+                "tags": [
+                    "Materi"
+                ],
                 "summary": "Detail Konten Materi Pembelajaran",
                 "description": "Mengambil detail lengkap materi pembelajaran kimia termasuk isi konten teori (HTML / teks).",
                 "operationId": "4c9307cd61989b969d7eb250eaa5260f",
@@ -1577,7 +1612,9 @@
         },
         "/molecules": {
             "get": {
-                "tags": ["Molekul"],
+                "tags": [
+                    "Molekul"
+                ],
                 "summary": "Daftar Katalog Molekul 3D",
                 "description": "Mengambil daftar seluruh molekul kimia 3D dengan opsi pencarian (berdasarkan nama atau rumus kimia) dan filter bentuk geometri.",
                 "operationId": "e554a52fa5b17bfb6bdda5a5ed4c043c",
@@ -1686,7 +1723,9 @@
         },
         "/molecules/{id}": {
             "get": {
-                "tags": ["Molekul"],
+                "tags": [
+                    "Molekul"
+                ],
                 "summary": "Detail Molekul 3D",
                 "description": "Mengambil detail lengkap suatu molekul kimia termasuk deskripsi teori dan URL model 3D.",
                 "operationId": "204af82e0f4082a9ea42fe7a8e611b53",
@@ -1806,7 +1845,9 @@
         },
         "/profile": {
             "put": {
-                "tags": ["Profile"],
+                "tags": [
+                    "Profile"
+                ],
                 "summary": "Pembaruan Profil Pengguna",
                 "description": "Memperbarui data profil pengguna yang sedang login (nama, email, sekolah, dan jenjang kelas).",
                 "operationId": "74599296b1816be41ad4228975229966",
@@ -1985,7 +2026,9 @@
         },
         "/profile/password": {
             "put": {
-                "tags": ["Profile"],
+                "tags": [
+                    "Profile"
+                ],
                 "summary": "Pembaruan Kata Sandi (Password)",
                 "description": "Memperbarui kata sandi akun pengguna dengan memverifikasi kata sandi lama terlebih dahulu.",
                 "operationId": "40f40b3f02ad252300bd78e362f6ef95",
@@ -1995,7 +2038,10 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "required": ["current_password", "password"],
+                                "required": [
+                                    "current_password",
+                                    "password"
+                                ],
                                 "properties": {
                                     "current_password": {
                                         "type": "string",
@@ -2088,7 +2134,9 @@
         },
         "/progress": {
             "get": {
-                "tags": ["Progres Belajar"],
+                "tags": [
+                    "Progres Belajar"
+                ],
                 "summary": "Ringkasan & Detail Progres Belajar",
                 "description": "Mengambil ringkasan progres belajar yang seragam untuk materi, molekul 3D, dan kuis (jumlah total, telah selesai, belum selesai, dan persentase) serta daftar ID tuntas untuk lookup cepat O(1) di aplikasi mobile.",
                 "operationId": "3f2443914007bd21a8a7878e12e26348",
@@ -2205,8 +2253,14 @@
                                                                 "type": "integer"
                                                             },
                                                             "example": [
-                                                                1, 2, 4, 5, 7,
-                                                                8, 9, 10
+                                                                1,
+                                                                2,
+                                                                4,
+                                                                5,
+                                                                7,
+                                                                8,
+                                                                9,
+                                                                10
                                                             ]
                                                         },
                                                         "molecules": {
@@ -2215,7 +2269,11 @@
                                                                 "type": "integer"
                                                             },
                                                             "example": [
-                                                                1, 3, 5, 6, 8
+                                                                1,
+                                                                3,
+                                                                5,
+                                                                6,
+                                                                8
                                                             ]
                                                         },
                                                         "quiz": {
@@ -2223,7 +2281,10 @@
                                                             "items": {
                                                                 "type": "integer"
                                                             },
-                                                            "example": [1, 2]
+                                                            "example": [
+                                                                1,
+                                                                2
+                                                            ]
                                                         }
                                                     },
                                                     "type": "object"
@@ -2263,7 +2324,9 @@
         },
         "/progress/material": {
             "post": {
-                "tags": ["Progres Belajar"],
+                "tags": [
+                    "Progres Belajar"
+                ],
                 "summary": "Tandai Progres Materi Selesai",
                 "description": "Mencatat bahwa suatu materi pembelajaran telah selesai dibaca/dipelajari oleh pengguna.",
                 "operationId": "544c0ce3a7ad6dcebd1198d310c51d39",
@@ -2272,7 +2335,9 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "required": ["id_material"],
+                                "required": [
+                                    "id_material"
+                                ],
                                 "properties": {
                                     "id_material": {
                                         "description": "ID materi yang dibaca",
@@ -2375,7 +2440,9 @@
         },
         "/progress/molecule": {
             "post": {
-                "tags": ["Progres Belajar"],
+                "tags": [
+                    "Progres Belajar"
+                ],
                 "summary": "Tandai Progres Eksplorasi Molekul 3D",
                 "description": "Mencatat bahwa suatu model molekul 3D telah selesai dieksplorasi oleh pengguna.",
                 "operationId": "588b78d3fd79497db48b482332dc6ec9",
@@ -2384,7 +2451,9 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "required": ["id_molecule"],
+                                "required": [
+                                    "id_molecule"
+                                ],
                                 "properties": {
                                     "id_molecule": {
                                         "description": "ID molekul 3D",
@@ -2487,7 +2556,9 @@
         },
         "/progress/category": {
             "post": {
-                "tags": ["Progres Belajar"],
+                "tags": [
+                    "Progres Belajar"
+                ],
                 "summary": "Tandai Progres Kuis / Soal Kategori Selesai",
                 "description": "Mencatat bahwa kumpulan latihan soal/kuis pada kategori tersebut telah selesai dikerjakan oleh pengguna.",
                 "operationId": "8a55e294115717f2357a7d75dabb5a49",
@@ -2496,7 +2567,9 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "required": ["id_category"],
+                                "required": [
+                                    "id_category"
+                                ],
                                 "properties": {
                                     "id_category": {
                                         "description": "ID kategori yang soalnya telah diselesaikan",
