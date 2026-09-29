@@ -75,7 +75,7 @@ class MaterialController extends Controller
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'id_category' => ['required', 'integer', 'exists:categories,id_category'],
-            'description' => ['required', 'string', 'max:1000'],
+            'description' => ['required', 'string', 'max:5000'],
             'content' => ['required', 'string'],
         ]);
 
@@ -112,7 +112,7 @@ class MaterialController extends Controller
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'id_category' => ['required', 'integer', 'exists:categories,id_category'],
-            'description' => ['required', 'string', 'max:1000'],
+            'description' => ['required', 'string', 'max:5000'],
             'content' => ['required', 'string'],
         ]);
 

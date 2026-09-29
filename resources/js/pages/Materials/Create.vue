@@ -130,13 +130,13 @@ const submit = () => {
                                 <span class="text-rose-400">*</span>
                             </label>
                             <span class="text-[11px] text-slate-400">
-                                {{ form.description.length }}/500 karakter
+                                {{ form.description.length }}/5000 karakter
                             </span>
                         </div>
                         <textarea
                             v-model="form.description"
                             rows="2"
-                            maxlength="500"
+                            maxlength="5000"
                             placeholder="Tuliskan ringkasan 1-2 kalimat pengantar mengenai apa yang akan dipelajari siswa di materi ini..."
                             class="w-full rounded-xl border border-[#1b344d] bg-[#0c1a28] px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:border-[#e5a824] focus:ring-1 focus:ring-[#e5a824] focus:outline-none"
                             required

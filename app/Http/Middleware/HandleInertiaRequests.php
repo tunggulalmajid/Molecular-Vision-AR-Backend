@@ -33,6 +33,7 @@ class HandleInertiaRequests extends Middleware
 
         return [
             ...parent::share($request),
+            'appName' => config('app.name', 'Molecular Vision AR'),
             'auth' => [
                 'user' => $user,
                 'permissions' => $user ? $user->getAllPermissions()->pluck('name')->toArray() : [],
