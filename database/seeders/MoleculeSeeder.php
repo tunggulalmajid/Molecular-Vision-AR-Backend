@@ -15,6 +15,7 @@ class MoleculeSeeder extends Seeder
         $molecules = [
             [
                 'name' => 'Air',
+                'order' => 1,
                 'model_3d_url' => 'https://assets.mvar.id/models/h2o.glb',
                 'formula' => 'H2O',
                 'shape' => 'Bengkok (Bent)',
@@ -24,6 +25,7 @@ class MoleculeSeeder extends Seeder
             ],
             [
                 'name' => 'Karbon Dioksida',
+                'order' => 2,
                 'model_3d_url' => 'https://assets.mvar.id/models/co2.glb',
                 'formula' => 'CO2',
                 'shape' => 'Linear',
@@ -33,6 +35,7 @@ class MoleculeSeeder extends Seeder
             ],
             [
                 'name' => 'Metana',
+                'order' => 3,
                 'model_3d_url' => 'https://assets.mvar.id/models/ch4.glb',
                 'formula' => 'CH4',
                 'shape' => 'Tetrahedral',
@@ -42,6 +45,7 @@ class MoleculeSeeder extends Seeder
             ],
             [
                 'name' => 'Amonia',
+                'order' => 4,
                 'model_3d_url' => 'https://assets.mvar.id/models/nh3.glb',
                 'formula' => 'NH3',
                 'shape' => 'Trigonal Piramidal',

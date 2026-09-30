@@ -32,6 +32,7 @@ class Material extends Model
     protected $fillable = [
         'name',
         'id_category',
+        'order',
         'description',
         'content',
     ];
@@ -43,6 +44,7 @@ class Material extends Model
     {
         return [
             'id_category' => 'integer',
+            'order' => 'integer',
         ];
     }
 

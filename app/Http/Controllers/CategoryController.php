@@ -26,7 +26,8 @@ class CategoryController extends Controller
                         ->orWhere('description', 'like', "%{$search}%");
                 });
             })
-            ->latest('id_category')
+            ->orderBy('order', 'asc')
+            ->orderBy('id_category', 'asc')
             ->paginate(10)
             ->withQueryString();
 
@@ -45,8 +46,13 @@ class CategoryController extends Controller
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:100', 'unique:categories,name'],
+            'order' => ['nullable', 'integer', 'min:1'],
             'description' => ['required', 'string'],
         ]);
+
+        if (empty($validated['order'])) {
+            $validated['order'] = ((int) Category::max('order')) + 1;
+        }
 
         Category::create($validated);
 
@@ -65,8 +71,13 @@ class CategoryController extends Controller
                 'max:100',
                 Rule::unique('categories', 'name')->ignore($category->id_category, 'id_category'),
             ],
+            'order' => ['nullable', 'integer', 'min:1'],
             'description' => ['required', 'string'],
         ]);
+
+        if (empty($validated['order'])) {
+            $validated['order'] = $category->order ?: (((int) Category::max('order')) + 1);
+        }
 
         $category->update($validated);
 

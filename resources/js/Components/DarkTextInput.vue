@@ -2,17 +2,25 @@
 import { ref } from 'vue';
 import { Eye, EyeOff } from 'lucide-vue-next';
 
+defineOptions({
+    inheritAttrs: false,
+});
+
 const props = withDefaults(
     defineProps<{
-        modelValue: string;
+        modelValue?: string | number | null;
         type?: string;
         placeholder?: string;
         required?: boolean;
         autofocus?: boolean;
         autocomplete?: string;
         showPasswordToggle?: boolean;
+        min?: string | number;
+        max?: string | number;
+        step?: string | number;
     }>(),
     {
+        modelValue: '',
         type: 'text',
         placeholder: '',
         required: false,
@@ -23,7 +31,7 @@ const props = withDefaults(
 );
 
 defineEmits<{
-    (e: 'update:modelValue', value: string): void;
+    (e: 'update:modelValue', value: string | number): void;
 }>();
 
 const inputRef = ref<HTMLInputElement | null>(null);
@@ -38,6 +46,7 @@ const togglePasswordVisibility = () => {
     <div class="relative w-full">
         <input
             ref="inputRef"
+            v-bind="$attrs"
             :type="
                 showPasswordToggle
                     ? isPasswordVisible
@@ -45,7 +54,7 @@ const togglePasswordVisibility = () => {
                         : 'password'
                     : type
             "
-            :value="modelValue"
+            :value="modelValue ?? ''"
             @input="
                 $emit(
                     'update:modelValue',
@@ -56,6 +65,9 @@ const togglePasswordVisibility = () => {
             :required="required"
             :autofocus="autofocus"
             :autocomplete="autocomplete"
+            :min="min"
+            :max="max"
+            :step="step"
             :class="[
                 'w-full rounded-lg border border-[#1b344d] bg-[#0c1a28] py-3 text-sm text-white placeholder-slate-500 transition-all duration-150',
                 'focus:border-[#2e5984] focus:ring-1 focus:ring-[#2e5984] focus:outline-none',

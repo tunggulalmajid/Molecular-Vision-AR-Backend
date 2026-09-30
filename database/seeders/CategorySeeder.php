@@ -15,14 +15,17 @@ class CategorySeeder extends Seeder
         $categories = [
             [
                 'name' => 'Geometri Molekul',
+                'order' => 1,
                 'description' => 'Mempelajari susunan ruang tiga dimensi dari atom-atom dalam molekul berdasarkan teori VSEPR.',
             ],
             [
                 'name' => 'Ikatan Kimia',
+                'order' => 2,
                 'description' => 'Mempelajari jenis-jenis ikatan kimia seperti kovalen, polar, nonpolar, dan ikatan ionik.',
             ],
             [
                 'name' => 'Hibridisasi Orbital',
+                'order' => 3,
                 'description' => 'Mempelajari konsep pencampuran orbital atom untuk membentuk orbital hibrida baru (sp, sp2, sp3, sp3d, sp3d2).',
             ],
         ];
@@ -30,7 +33,10 @@ class CategorySeeder extends Seeder
         foreach ($categories as $category) {
             Category::firstOrCreate(
                 ['name' => $category['name']],
-                ['description' => $category['description']],
+                [
+                    'order' => $category['order'],
+                    'description' => $category['description'],
+                ],
             );
         }
     }

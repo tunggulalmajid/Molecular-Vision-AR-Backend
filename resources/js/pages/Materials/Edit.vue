@@ -19,6 +19,7 @@ const props = defineProps<{
 const form = useForm({
     name: props.material.name || '',
     id_category: props.material.id_category || '',
+    order: (props.material.order ?? '') as string | number,
     description: props.material.description || '',
     content: props.material.content || '',
 });
@@ -67,9 +68,9 @@ const submit = () => {
                 <div
                     class="space-y-5 rounded-xl border border-[#14263b] bg-[#091624] p-6 shadow-xl"
                 >
-                    <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+                    <div class="grid grid-cols-1 gap-5 md:grid-cols-3">
                         <!-- Judul Materi -->
-                        <div>
+                        <div class="md:col-span-3">
                             <label
                                 class="mb-1.5 block text-xs font-semibold tracking-wider text-slate-300 uppercase"
                             >
@@ -90,7 +91,7 @@ const submit = () => {
                         </div>
 
                         <!-- Kategori Kimia -->
-                        <div>
+                        <div class="md:col-span-2">
                             <label
                                 class="mb-1.5 block text-xs font-semibold tracking-wider text-slate-300 uppercase"
                             >
@@ -118,6 +119,27 @@ const submit = () => {
                                 class="mt-1 text-xs text-rose-400"
                             >
                                 {{ form.errors.id_category }}
+                            </p>
+                        </div>
+
+                        <!-- Urutan Materi -->
+                        <div>
+                            <label
+                                class="mb-1.5 block text-xs font-semibold tracking-wider text-slate-300 uppercase"
+                            >
+                                Urutan Tampil
+                            </label>
+                            <DarkTextInput
+                                v-model="form.order"
+                                type="number"
+                                min="1"
+                                placeholder="Auto"
+                            />
+                            <p
+                                v-if="form.errors.order"
+                                class="mt-1 text-xs text-rose-400"
+                            >
+                                {{ form.errors.order }}
                             </p>
                         </div>
                     </div>

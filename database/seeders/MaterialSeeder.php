@@ -23,12 +23,14 @@ class MaterialSeeder extends Seeder
             [
                 'name' => 'Pengenalan Teori VSEPR',
                 'id_category' => $geometryCategory->id_category,
+                'order' => 1,
                 'description' => 'Memahami dasar-dasar teori Valence Shell Electron Pair Repulsion (VSEPR) dalam penentuan bentuk molekul.',
                 'content' => 'Teori VSEPR menyatakan bahwa pasangan elektron valensi di sekitar atom pusat akan saling tolak-menolak sejauh mungkin untuk meminimalkan gaya tolak antar elektron...',
             ],
             [
                 'name' => 'Bentuk Dasar Geometri Molekul',
                 'id_category' => $geometryCategory->id_category,
+                'order' => 2,
                 'description' => 'Mengenal 5 bentuk geometri molekul dasar: Linear, Trigonal Planar, Tetrahedral, Trigonal Bipiramidal, dan Oktahedral.',
                 'content' => 'Berdasarkan domain elektron ikatan (DEI) dan domain elektron bebas (DEB), bentuk dasar molekul dapat diklasifikasikan menjadi lima susunan geometri ruang utama...',
             ],

@@ -24,7 +24,18 @@ class Category extends Model
     protected $fillable = [
         'name',
         'description',
+        'order',
     ];
+
+    /**
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'order' => 'integer',
+        ];
+    }
 
     /**
      * @return HasMany<Material, $this>

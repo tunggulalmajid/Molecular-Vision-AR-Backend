@@ -54,6 +54,7 @@ const selectedCategory = ref<CategoryItem | null>(null);
 // Table configuration (conditional on permissions)
 const tableHeaders = computed<TableHeader[]>(() => {
     const headers: TableHeader[] = [
+        { label: 'URUTAN', width: '90px', align: 'center' },
         { label: 'NAMA KATEGORI', width: '200px' },
         { label: 'DESKRIPSI', width: '280px' },
         { label: 'TOTAL MATERI', width: '130px' },
@@ -198,6 +199,15 @@ const truncateText = (
                         :key="cat.id_category"
                         class="transition hover:bg-[#0c1c2e]"
                     >
+                        <!-- URUTAN -->
+                        <td class="px-6 py-4 text-center whitespace-nowrap">
+                            <span
+                                class="inline-flex items-center justify-center rounded-lg border border-[#1b344d] bg-[#0e2238] px-2.5 py-1 font-mono text-xs font-semibold text-[#e5a824]"
+                            >
+                                #{{ cat.order ?? '-' }}
+                            </span>
+                        </td>
+
                         <!-- NAMA KATEGORI -->
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="flex items-center gap-3">

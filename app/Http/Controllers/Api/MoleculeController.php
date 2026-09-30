@@ -52,6 +52,7 @@ class MoleculeController extends Controller
                                 properties: [
                                     new OA\Property(property: 'id_molecule', type: 'integer', example: 1),
                                     new OA\Property(property: 'name', type: 'string', example: 'Air'),
+                                    new OA\Property(property: 'order', type: 'integer', example: 1),
                                     new OA\Property(property: 'formula', type: 'string', example: 'H2O'),
                                     new OA\Property(property: 'shape', type: 'string', example: 'Bengkok (Bent)'),
                                     new OA\Property(property: 'bent', type: 'string', example: '104.5°'),
@@ -87,8 +88,9 @@ class MoleculeController extends Controller
             ->when($request->filled('shape'), function ($q) use ($request) {
                 $q->where('shape', $request->input('shape'));
             })
-            ->select(['id_molecule', 'name', 'formula', 'shape', 'bent', 'bond_type', 'model_3d_url'])
-            ->orderBy('name')
+            ->select(['id_molecule', 'name', 'order', 'formula', 'shape', 'bent', 'bond_type', 'model_3d_url'])
+            ->orderBy('order', 'asc')
+            ->orderBy('id_molecule', 'asc')
             ->get();
 
         return response()->json([

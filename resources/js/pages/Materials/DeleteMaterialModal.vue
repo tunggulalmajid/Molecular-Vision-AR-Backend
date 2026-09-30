@@ -7,6 +7,7 @@ export interface MaterialItem {
     id_material: number;
     name: string;
     id_category: number;
+    order?: number;
     description: string;
     content: string;
     created_at?: string;

@@ -8,6 +8,7 @@ import { Loader2 } from 'lucide-vue-next';
 export interface CategoryItem {
     id_category: number;
     name: string;
+    order?: number;
     description: string;
     materials_count?: number;
     questions_count?: number;
@@ -24,6 +25,7 @@ const emit = defineEmits<{
 
 const form = useForm({
     name: '',
+    order: '' as string | number,
     description: '',
 });
 
@@ -38,6 +40,7 @@ watch(
 
         if (props.category) {
             form.name = props.category.name;
+            form.order = props.category.order ?? '';
             form.description = props.category.description;
         } else {
             form.reset();
@@ -73,22 +76,47 @@ const submit = () => {
         @close="$emit('close')"
     >
         <form @submit.prevent="submit" class="space-y-4">
-            <!-- Nama Kategori -->
-            <div>
-                <label
-                    class="mb-1.5 block text-xs font-semibold tracking-wider text-slate-300 uppercase"
-                >
-                    Nama Kategori <span class="text-rose-500">*</span>
-                </label>
-                <DarkTextInput
-                    v-model="form.name"
-                    placeholder="Contoh: Geometri Molekul, Ikatan Kimia"
-                    required
-                    autofocus
-                />
-                <p v-if="form.errors.name" class="mt-1 text-xs text-rose-400">
-                    {{ form.errors.name }}
-                </p>
+            <!-- Nama Kategori & Urutan -->
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                <div class="sm:col-span-2">
+                    <label
+                        class="mb-1.5 block text-xs font-semibold tracking-wider text-slate-300 uppercase"
+                    >
+                        Nama Kategori <span class="text-rose-500">*</span>
+                    </label>
+                    <DarkTextInput
+                        v-model="form.name"
+                        placeholder="Contoh: Geometri Molekul"
+                        required
+                        autofocus
+                    />
+                    <p
+                        v-if="form.errors.name"
+                        class="mt-1 text-xs text-rose-400"
+                    >
+                        {{ form.errors.name }}
+                    </p>
+                </div>
+
+                <div>
+                    <label
+                        class="mb-1.5 block text-xs font-semibold tracking-wider text-slate-300 uppercase"
+                    >
+                        Urutan
+                    </label>
+                    <DarkTextInput
+                        v-model="form.order"
+                        type="number"
+                        min="1"
+                        placeholder="Auto"
+                    />
+                    <p
+                        v-if="form.errors.order"
+                        class="mt-1 text-xs text-rose-400"
+                    >
+                        {{ form.errors.order }}
+                    </p>
+                </div>
             </div>
 
             <!-- Deskripsi Kategori -->

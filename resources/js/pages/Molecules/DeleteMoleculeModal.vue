@@ -6,6 +6,7 @@ import { AlertTriangle, Loader2 } from 'lucide-vue-next';
 export interface MoleculeItem {
     id_molecule: number;
     name: string;
+    order?: number;
     formula: string;
     shape: string;
     bent: string;

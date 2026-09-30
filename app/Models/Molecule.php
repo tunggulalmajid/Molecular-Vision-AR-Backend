@@ -33,6 +33,7 @@ class Molecule extends Model
      */
     protected $fillable = [
         'name',
+        'order',
         'model_3d_url',
         'formula',
         'shape',
@@ -40,6 +41,16 @@ class Molecule extends Model
         'bond_type',
         'description',
     ];
+
+    /**
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'order' => 'integer',
+        ];
+    }
 
     /**
      * @return HasMany<UserMoleculeProgress, $this>

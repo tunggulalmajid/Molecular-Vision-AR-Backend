@@ -33,13 +33,15 @@ class MaterialController extends Controller
             ->when($categoryId, function ($query, $categoryId) {
                 $query->where('id_category', $categoryId);
             })
-            ->latest('id_material')
+            ->orderBy('order', 'asc')
+            ->orderBy('id_material', 'asc')
             ->paginate(10)
             ->withQueryString();
 
         $categories = Category::query()
             ->select('id_category', 'name')
-            ->orderBy('name')
+            ->orderBy('order', 'asc')
+            ->orderBy('name', 'asc')
             ->get();
 
         return Inertia::render('Materials/Index', [
@@ -59,7 +61,8 @@ class MaterialController extends Controller
     {
         $categories = Category::query()
             ->select('id_category', 'name')
-            ->orderBy('name')
+            ->orderBy('order', 'asc')
+            ->orderBy('name', 'asc')
             ->get();
 
         return Inertia::render('Materials/Create', [
@@ -75,9 +78,15 @@ class MaterialController extends Controller
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'id_category' => ['required', 'integer', 'exists:categories,id_category'],
+            'order' => ['nullable', 'integer', 'min:1'],
             'description' => ['required', 'string', 'max:5000'],
             'content' => ['required', 'string'],
         ]);
+
+        if (empty($validated['order'])) {
+            $maxOrder = Material::where('id_category', $validated['id_category'])->max('order') ?? 0;
+            $validated['order'] = ((int) $maxOrder) + 1;
+        }
 
         Material::create($validated);
 
@@ -95,7 +104,8 @@ class MaterialController extends Controller
 
         $categories = Category::query()
             ->select('id_category', 'name')
-            ->orderBy('name')
+            ->orderBy('order', 'asc')
+            ->orderBy('name', 'asc')
             ->get();
 
         return Inertia::render('Materials/Edit', [
@@ -112,9 +122,15 @@ class MaterialController extends Controller
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'id_category' => ['required', 'integer', 'exists:categories,id_category'],
+            'order' => ['nullable', 'integer', 'min:1'],
             'description' => ['required', 'string', 'max:5000'],
             'content' => ['required', 'string'],
         ]);
+
+        if (empty($validated['order'])) {
+            $maxOrder = Material::where('id_category', $validated['id_category'])->max('order') ?? 0;
+            $validated['order'] = $material->order ?: (((int) $maxOrder) + 1);
+        }
 
         $material->update($validated);
 

@@ -35,6 +35,7 @@ class CategoryController extends Controller
                                 properties: [
                                     new OA\Property(property: 'id_category', type: 'integer', example: 1),
                                     new OA\Property(property: 'name', type: 'string', example: 'Stoikiometri'),
+                                    new OA\Property(property: 'order', type: 'integer', example: 1),
                                     new OA\Property(property: 'description', type: 'string', example: 'Mempelajari konsep mol, rumus empiris, dan stoikiometri larutan.'),
                                     new OA\Property(property: 'materials_count', type: 'integer', example: 4),
                                     new OA\Property(property: 'questions_count', type: 'integer', example: 15),
@@ -59,7 +60,8 @@ class CategoryController extends Controller
     {
         $categories = Category::query()
             ->withCount(['materials', 'questions'])
-            ->orderBy('id_category')
+            ->orderBy('order', 'asc')
+            ->orderBy('id_category', 'asc')
             ->get();
 
         return response()->json([

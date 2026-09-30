@@ -53,6 +53,7 @@ class MaterialController extends Controller
                                     new OA\Property(property: 'id_material', type: 'integer', example: 1),
                                     new OA\Property(property: 'id_category', type: 'integer', example: 1),
                                     new OA\Property(property: 'name', type: 'string', example: 'Hukum Dasar Kimia & Konsep Mol'),
+                                    new OA\Property(property: 'order', type: 'integer', example: 1),
                                     new OA\Property(property: 'description', type: 'string', example: 'Pengantar perhitungan kimia dan stoikiometri dasar.'),
                                     new OA\Property(
                                         property: 'category',
@@ -94,8 +95,9 @@ class MaterialController extends Controller
                         ->orWhere('description', 'like', "%{$search}%");
                 });
             })
-            ->select(['id_material', 'id_category', 'name', 'description'])
-            ->orderBy('id_material')
+            ->select(['id_material', 'id_category', 'name', 'order', 'description'])
+            ->orderBy('order', 'asc')
+            ->orderBy('id_material', 'asc')
             ->get();
 
         return response()->json([

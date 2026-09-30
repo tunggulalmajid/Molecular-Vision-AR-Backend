@@ -7,6 +7,7 @@ import { ArrowLeft, Check, Loader2, Atom, Sparkles } from 'lucide-vue-next';
 
 const form = useForm({
     name: '',
+    order: '' as string | number,
     formula: '',
     shape: '',
     bent: '',
@@ -71,7 +72,7 @@ const submit = () => {
                         </h2>
                     </div>
 
-                    <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+                    <div class="grid grid-cols-1 gap-5 md:grid-cols-3">
                         <!-- Nama Molekul -->
                         <div>
                             <label
@@ -111,6 +112,27 @@ const submit = () => {
                                 class="mt-1 text-xs text-rose-400"
                             >
                                 {{ form.errors.formula }}
+                            </p>
+                        </div>
+
+                        <!-- Urutan Molekul -->
+                        <div>
+                            <label
+                                class="mb-1.5 block text-xs font-semibold tracking-wider text-slate-300 uppercase"
+                            >
+                                Urutan Tampil
+                            </label>
+                            <DarkTextInput
+                                v-model="form.order"
+                                type="number"
+                                min="1"
+                                placeholder="Auto"
+                            />
+                            <p
+                                v-if="form.errors.order"
+                                class="mt-1 text-xs text-rose-400"
+                            >
+                                {{ form.errors.order }}
                             </p>
                         </div>
 
