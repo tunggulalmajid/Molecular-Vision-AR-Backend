@@ -83,7 +83,7 @@ class MoleculeController extends Controller
         $file = $request->file('model_3d_file');
         $uploaded = $storageService->upload3DModel($file, 'molecules/models');
 
-        $order = !empty($validated['order']) ? (int) $validated['order'] : (((int) Molecule::max('order')) + 1);
+        $order = ! empty($validated['order']) ? (int) $validated['order'] : (((int) Molecule::max('order')) + 1);
 
         Molecule::create([
             'name' => $validated['name'],
@@ -127,7 +127,7 @@ class MoleculeController extends Controller
             'model_3d_file' => ['nullable', 'file', 'max:51200'],
         ]);
 
-        $order = !empty($validated['order']) ? (int) $validated['order'] : ($molecule->order ?: (((int) Molecule::max('order')) + 1));
+        $order = ! empty($validated['order']) ? (int) $validated['order'] : ($molecule->order ?: (((int) Molecule::max('order')) + 1));
 
         $updateData = [
             'name' => $validated['name'],
