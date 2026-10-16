@@ -34,6 +34,12 @@ class User extends Authenticatable implements MustVerifyEmail
     /** @use HasFactory<UserFactory> */
     use HasApiTokens, HasFactory, HasRoles, Notifiable, SoftDeletes;
 
+    public const ROLE_SUPER_ADMIN = 1;
+
+    public const ROLE_ADMIN = 2;
+
+    public const ROLE_SISWA = 3;
+
     protected $table = 'users';
 
     protected $primaryKey = 'id_user';

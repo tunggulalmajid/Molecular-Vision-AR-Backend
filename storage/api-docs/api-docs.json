@@ -164,6 +164,26 @@
                             }
                         }
                     },
+                    "403": {
+                        "description": "Akses ditolak (role pengguna bukan siswa/mobile).",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Akses ditolak. Akun ini tidak diizinkan login melalui aplikasi mobile."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
                     "422": {
                         "description": "Validasi form gagal.",
                         "content": {
@@ -649,6 +669,10 @@
                                                     "name": {
                                                         "type": "string",
                                                         "example": "Stoikiometri"
+                                                    },
+                                                    "order": {
+                                                        "type": "integer",
+                                                        "example": 1
                                                     },
                                                     "description": {
                                                         "type": "string",
@@ -1401,6 +1425,10 @@
                                                         "type": "string",
                                                         "example": "Hukum Dasar Kimia & Konsep Mol"
                                                     },
+                                                    "order": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
                                                     "description": {
                                                         "type": "string",
                                                         "example": "Pengantar perhitungan kimia dan stoikiometri dasar."
@@ -1629,6 +1657,10 @@
                                                     "name": {
                                                         "type": "string",
                                                         "example": "Air"
+                                                    },
+                                                    "order": {
+                                                        "type": "integer",
+                                                        "example": 1
                                                     },
                                                     "formula": {
                                                         "type": "string",

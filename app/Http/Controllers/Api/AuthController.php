@@ -95,6 +95,16 @@ class AuthController extends Controller
                 )
             ),
             new OA\Response(
+                response: 403,
+                description: 'Akses ditolak (role pengguna bukan siswa/mobile).',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'success', type: 'boolean', example: false),
+                        new OA\Property(property: 'message', type: 'string', example: 'Akses ditolak. Akun ini tidak diizinkan login melalui aplikasi mobile.'),
+                    ]
+                )
+            ),
+            new OA\Response(
                 response: 422,
                 description: 'Validasi form gagal.',
                 content: new OA\JsonContent(
@@ -130,6 +140,21 @@ class AuthController extends Controller
                 'success' => false,
                 'message' => 'Email atau kata sandi tidak valid.',
             ], 401);
+        }
+
+        // Pembatasan: Hanya role siswa (berdasarkan ID role) yang diizinkan login lewat mobile API
+        $roleId = (int) ($user->id_role ?? $user->roles()->value('roles.id'));
+
+        if ($roleId !== User::ROLE_SISWA) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Akses ditolak. Akun ini tidak diizinkan login melalui aplikasi mobile.',
+            ], 403);
+        }
+
+        // Sinkronisasi id_role jika sebelumnya kosong agar relasi role termuat konsisten
+        if ($user->id_role === null) {
+            $user->forceFill(['id_role' => $roleId])->save();
         }
 
         $token = $user->createToken('mobile_auth_token')->plainTextToken;
@@ -254,7 +279,7 @@ class AuthController extends Controller
         $validated = $request->validate($rules);
 
         $user = DB::transaction(function () use ($validated) {
-            $siswaRole = Role::where('name', 'siswa (mobile)')->first();
+            $siswaRole = Role::find(User::ROLE_SISWA) ?? Role::where('name', 'siswa (mobile)')->first();
 
             $user = User::create([
                 'name' => $validated['name'],
@@ -262,7 +287,7 @@ class AuthController extends Controller
                 'password' => Hash::make($validated['password']),
                 'school' => $validated['school'] ?? null,
                 'id_degree' => $validated['id_degree'] ?? null,
-                'id_role' => $siswaRole?->id,
+                'id_role' => $siswaRole ? $siswaRole->id : User::ROLE_SISWA,
             ]);
 
             if ($siswaRole) {
