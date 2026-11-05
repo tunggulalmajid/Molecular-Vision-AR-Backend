@@ -3,7 +3,7 @@ import AuthButton from '@/Components/AuthButton.vue';
 import DarkTextInput from '@/Components/DarkTextInput.vue';
 import FeaturePill from '@/Components/FeaturePill.vue';
 import InputError from '@/Components/InputError.vue';
-import { Head, useForm } from '@inertiajs/vue3';
+import { Head, Link, useForm } from '@inertiajs/vue3';
 import { LineChart } from 'lucide-vue-next';
 
 defineProps<{
@@ -184,8 +184,20 @@ const submit = () => {
                 </form>
             </div>
 
-            <!-- Bottom Copyright Footer -->
-            <footer class="mt-8 text-center">
+            <!-- Bottom Copyright Footer & Legal Links -->
+            <footer class="mt-8 space-y-2 text-center">
+                <div
+                    class="flex items-center justify-center gap-2 text-xs text-slate-400"
+                >
+                    <Link
+                        :href="route('privacy-policy')"
+                        class="underline-offset-4 transition-colors hover:text-[#e8a917] hover:underline"
+                    >
+                        Kebijakan Privasi
+                    </Link>
+                    <span class="text-slate-600">•</span>
+                    <span class="text-slate-500">MVAR Mobile & CMS</span>
+                </div>
                 <p class="text-[11px] text-slate-500 sm:text-xs">
                     © 2026 Molecular Vision AR — Sistem Manajemen Konten
                     Akademik

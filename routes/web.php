@@ -9,9 +9,19 @@ use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
 Route::get('/', function () {
     return redirect()->route('login');
+});
+
+// Halaman Publik: Kebijakan Privasi (Privacy Policy) untuk Mobile App & CMS
+Route::get('/privacy-policy', function () {
+    return Inertia::render('PrivacyPolicy');
+})->name('privacy-policy');
+
+Route::get('/kebijakan-privasi', function () {
+    return redirect()->route('privacy-policy');
 });
 
 Route::get('/dashboard', DashboardController::class)->middleware(['auth'])->name('dashboard');
